@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Emotion {
+  CALM
+  ANXIOUS
+  FRUSTRATED
+  CONFIDENT
+  EXCITED
+  NEUTRAL
+}
+
+model PreSession {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  intention String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostSession {
+  id         Int      @id @default(autoincrement())
+  timestamp  DateTime @default(now())
+  emotion    Emotion
+  reflection String
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
