@@ -7,29 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Emotion {
-  CALM
-  ANXIOUS
-  FRUSTRATED
-  CONFIDENT
-  EXCITED
-  NEUTRAL
-}
-
-model PreSession {
-  id        Int      @id @default(autoincrement())
-  timestamp DateTime @default(now())
-  intention String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PostSession {
+model Session {
   id         Int      @id @default(autoincrement())
+  type       String   // "pre" or "post"
   timestamp  DateTime @default(now())
-  emotion    Emotion
-  reflection String
+
+  intention  String?  // only for pre
+  emotion    String? // only for post
+  reflection String?  // only for post
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

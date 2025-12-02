@@ -6,13 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 require("./config/env");
-const preSessions_routes_1 = __importDefault(require("./routes/preSessions.routes"));
-const postSessions_routes_1 = __importDefault(require("./routes/postSessions.routes"));
+const sessions_routes_1 = __importDefault(require("./routes/sessions.routes"));
 const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Routes
-app.use("/api/pre-sessions", preSessions_routes_1.default);
-app.use("/api/post-sessions", postSessions_routes_1.default);
+app.use("/sessions", sessions_routes_1.default);
 exports.default = app;

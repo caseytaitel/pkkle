@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "./config/env"; 
-import preSessionsRouter from "./routes/preSessions.routes";
-import postSessionsRouter from "./routes/postSessions.routes";
+import sessionsRouter from "./routes/sessions.routes";
 
 const app = express();
 
@@ -11,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/pre-sessions", preSessionsRouter);
-app.use("/api/post-sessions", postSessionsRouter);
+app.use("/sessions", sessionsRouter);
 
 export default app;
