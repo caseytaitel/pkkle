@@ -19,7 +19,7 @@ export const sessionsService = {
           orderBy: { timestamp: "asc" },
         });
       },
-
+    
     create: async (data: CreateSessionInput) => {
       return prisma.session.create({
         data: {

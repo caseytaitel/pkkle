@@ -10,8 +10,8 @@ export const sessionsController = {
         } catch (err) {
           next(err);
         }
-      },
-    
+      },     
+
     create: async (req: Request, res: Response, next: NextFunction) => {
     const parseResult = createSessionSchema.safeParse(req.body);
 
