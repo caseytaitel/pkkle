@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { sessionsApi } from "../../api/sessionsApi";
+import Page from "../../components/ui/Page";
+import { Button } from "../../components/ui/Button";
+import { Textarea } from "../../components/ui/Textarea";
 
 export default function PostSessionPage() {
-  const navigate = useNavigate();
-
   const [emotion, setEmotion] = useState("");
   const [reflection, setReflection] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const emotions = [
     "Calm",
     "Confident",
-    "Excited",
-    "Anxious",
-    "Frustrated",
+    "Focused",
     "Neutral",
+    "Frustrated",
+    "Anxious",
+    "Excited",
   ];
 
   async function handleSubmit(e: React.FormEvent) {
@@ -32,37 +32,41 @@ export default function PostSessionPage() {
         reflection,
       });
 
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
-      setError("Failed to save post-session.");
+      setError("Failed to save your reflection. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen p-6 flex flex-col">
-      <h1 className="text-2xl font-semibold mb-4">How Did It Go?</h1>
+    <Page title="Post-Session Reflection">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label className="text-sm font-medium">Emotion</label>
-        <select
-          className="border rounded p-3 text-lg"
-          value={emotion}
-          onChange={(e) => setEmotion(e.target.value)}
-          required
-        >
-          <option value="">Select one...</option>
-          {emotions.map((emo) => (
-            <option key={emo} value={emo}>
-              {emo}
+        {/* EMOTION DROPDOWN */}
+        <div className="flex flex-col gap-2">
+          <label className="text-lg font-medium">How do you feel?</label>
+          <select
+            className="border rounded p-3 text-lg bg-white"
+            value={emotion}
+            onChange={(e) => setEmotion(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Select an emotion…
             </option>
-          ))}
-        </select>
+            {emotions.map((e) => (
+              <option key={e} value={e.toLowerCase()}>
+                {e}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <textarea
-          className="border rounded p-3 text-lg"
-          placeholder="Write a quick reflection..."
+        {/* REFLECTION */}
+        <Textarea
+          placeholder="Write your reflection…"
           value={reflection}
           onChange={(e) => setReflection(e.target.value)}
           required
@@ -70,14 +74,10 @@ export default function PostSessionPage() {
 
         {error && <p className="text-red-600">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-purple-600 text-white rounded p-3 disabled:bg-gray-400"
-        >
+        <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Reflection"}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Page>
   );
 }

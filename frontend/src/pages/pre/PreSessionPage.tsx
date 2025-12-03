@@ -2,11 +2,14 @@ import { useState } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
+import { Textarea } from "../../components/ui/Textarea";
+import { useNavigate } from "react-router-dom";
 
 export default function PreSessionPage() {
   const [intention, setIntention] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -18,7 +21,7 @@ export default function PreSessionPage() {
         type: "pre",
         intention,
       });
-      window.location.href = "/"; // redirect back
+      navigate("/");
     } catch (err) {
       setError("Failed to save your intention. Try again.");
     } finally {
@@ -29,14 +32,14 @@ export default function PreSessionPage() {
   return (
     <Page title="Set Your Intention">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <textarea
-          className="border rounded p-3 text-lg"
-          placeholder="What’s your intention for this session?"
-          value={intention}
-          onChange={(e) => setIntention(e.target.value)}
-          required
-        />
-  
+      <Textarea
+        autoFocus
+        placeholder="What’s your intention for this session?"
+        value={intention}
+        onChange={(e) => setIntention(e.target.value)}
+        required
+      />
+
         {error && <p className="text-red-600">{error}</p>}
   
         <Button type="submit" disabled={loading}>

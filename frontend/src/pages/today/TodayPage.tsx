@@ -33,29 +33,33 @@ export default function TodayPage() {
 
   return (
     <Page title="Today">
-      {!hasPre && (
-        <Button onClick={() => navigate("/pre")}>
-          Start Pre-Session
-        </Button>
-      )}
+      <div className="space-y-4 mt-2">
   
-      {hasPre && (
-        <div className="p-4 bg-green-100 text-green-800 rounded-lg">
-          Pre-session complete ✔
-        </div>
-      )}
+        {!hasPre && (
+          <Button onClick={() => navigate("/pre")}>
+            Start Pre-Session
+          </Button>
+        )}
   
-      {!hasPost && hasPre && (
-        <Button onClick={() => navigate("/post")}>
-          Finish Post-Session
-        </Button>
-      )}
+        {hasPre && (
+          <div className="p-4 bg-green-100 text-green-800 rounded-lg text-center font-medium">
+            Pre-session complete ✔
+          </div>
+        )}
   
-      {hasPost && (
-        <div className="p-4 bg-green-100 text-green-800 rounded-lg">
-          Post-session complete ✔
-        </div>
-      )}
+        {!hasPost && hasPre && (
+          <Button onClick={() => navigate("/post")}>
+            Finish Post-Session
+          </Button>
+        )}
+  
+        {hasPost && (
+          <div className="p-4 bg-green-100 text-green-800 rounded-lg text-center font-medium">
+            Post-session complete ✔
+          </div>
+        )}
+  
+      </div>
     </Page>
-  );
+  );  
 }

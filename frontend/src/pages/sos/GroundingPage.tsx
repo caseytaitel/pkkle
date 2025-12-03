@@ -16,24 +16,22 @@ export default function GroundingPage() {
   useEffect(() => {
     const current = PHASES[phaseIndex];
 
-    // Phase animation logic
+    // Animation
     if (current.label === "Breathe in") setScale("scale-125");
     if (current.label === "Hold") setScale("scale-125");
     if (current.label === "Breathe out") setScale("scale-75");
 
     const timer = setTimeout(() => {
-      // Move to next phase
       const next = phaseIndex + 1;
 
       if (next < PHASES.length) {
         setPhaseIndex(next);
       } else {
-        // Completed full cycle
+        // Completed a full cycle
         if (cycle < 3) {
           setCycle(cycle + 1);
           setPhaseIndex(0);
         } else {
-          // After 3 cycles, navigate to chat
           navigate("/sos/chat");
         }
       }
@@ -43,14 +41,24 @@ export default function GroundingPage() {
   }, [phaseIndex, cycle, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-      <h1 className="text-2xl font-semibold mb-4">Grounding</h1>
-      <p className="text-lg text-gray-600 mb-8">{PHASES[phaseIndex].label}</p>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center space-y-6">
+      
+      <h1 className="text-2xl font-semibold tracking-tight">
+        Grounding
+      </h1>
 
+      <p className="text-lg text-gray-600">
+        {PHASES[phaseIndex].label}
+      </p>
+
+      {/* Breathing Circle */}
       <div
-        className={`w-48 h-48 bg-blue-400 rounded-full transition-transform duration-[4000ms] ${scale}`}
+        className={`w-44 h-44 bg-blue-100 rounded-full transition-transform duration-[4000ms] ${scale}`}
       />
-      <p className="text-gray-500 mt-6">Cycle {cycle} of 3</p>
+
+      <p className="text-gray-500 text-sm mt-2">
+        Cycle {cycle} of 3
+      </p>
     </div>
   );
 }

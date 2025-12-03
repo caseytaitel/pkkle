@@ -1,27 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Page from "../../components/ui/Page";
+import { Textarea } from "../../components/ui/Textarea";
+import { Button } from "../../components/ui/Button";
 
 export default function ChatbotPage() {
   const navigate = useNavigate();
   const [text, setText] = useState("");
 
   return (
-    <div className="p-6 flex flex-col gap-6 min-h-screen">
-      <h1 className="text-2xl font-semibold">Reflection</h1>
+    <Page title="Reflect">
+      <p className="text-gray-700 leading-relaxed mb-2">
+        What’s coming up for you right now?
+        You can write as much or as little as you’d like.
+      </p>
 
-      <textarea
-        className="border rounded p-3 text-lg flex-1"
+      <Textarea
+        className="h-40"
+        autoFocus
         placeholder="Write anything on your mind..."
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
 
-      <button
-        onClick={() => navigate("/")}
-        className="bg-black text-white p-4 rounded-lg text-lg"
-      >
+      <Button onClick={() => navigate("/")}>
         Done
-      </button>
-    </div>
+      </Button>
+    </Page>
   );
 }
