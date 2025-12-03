@@ -53,7 +53,12 @@ export default function GroundingPage() {
 
       {/* Breathing Circle */}
       <div
-        className={`w-44 h-44 bg-blue-100 rounded-full transition-transform duration-[4000ms] ${scale}`}
+        className={`
+          w-48 h-48 rounded-full transition-transform duration-[4000ms]
+          ${scale}
+          animate-soft-pulse
+        `}
+        style={{ backgroundColor: "#87B8D5" }}
       />
 
       <p className="text-gray-500 text-sm mt-2">

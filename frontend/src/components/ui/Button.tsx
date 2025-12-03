@@ -9,10 +9,12 @@ export function Button({ variant = "primary", className, ...props }: Props) {
   return (
     <button
       className={clsx(
-        "w-full px-4 py-3 rounded-lg font-medium transition active:scale-[0.98]",
+        "px-4 py-3 rounded-xl font-medium transition",
+        "active:scale-[0.97] duration-150",                  // micro press animation
+        "disabled:opacity-50 disabled:cursor-not-allowed",   // disabled polish
         variant === "primary"
-          ? "bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300"
-          : "bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:bg-gray-200",
+          ? "bg-black text-white hover:bg-gray-900"
+          : "bg-gray-100 text-[var(--text-primary)] hover:bg-gray-200",
         className
       )}
       {...props}

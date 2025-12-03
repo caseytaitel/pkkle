@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t bg-white/90 backdrop-blur-sm">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white/90 backdrop-blur-sm pb-[calc(0.5rem+var(--safe-bottom))]">
       <div className="max-w-md mx-auto flex">
         <NavItem to="/" label="Today" />
         <NavItem to="/sos" label="SOS" />

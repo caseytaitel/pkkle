@@ -1,24 +1,17 @@
 import { useState } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
 import Page from "../../components/ui/Page";
+import { EMOTIONS } from "../../constants/emotions";
 import { Button } from "../../components/ui/Button";
 import { Textarea } from "../../components/ui/Textarea";
+import { useNavigate } from "react-router-dom";
 
 export default function PostSessionPage() {
   const [emotion, setEmotion] = useState("");
   const [reflection, setReflection] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const emotions = [
-    "Calm",
-    "Confident",
-    "Focused",
-    "Neutral",
-    "Frustrated",
-    "Anxious",
-    "Excited",
-  ];
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,7 +25,7 @@ export default function PostSessionPage() {
         reflection,
       });
 
-      window.location.href = "/";
+      navigate("/session/success", { state: { type: "post" }});
     } catch (err) {
       setError("Failed to save your reflection. Try again.");
     } finally {
@@ -56,9 +49,9 @@ export default function PostSessionPage() {
             <option value="" disabled>
               Select an emotion…
             </option>
-            {emotions.map((e) => (
-              <option key={e} value={e.toLowerCase()}>
-                {e}
+            {EMOTIONS.map((e) => (
+              <option key={e} value={e}>
+                {e.charAt(0).toUpperCase() + e.slice(1)}
               </option>
             ))}
           </select>

@@ -7,6 +7,7 @@ import PostSessionPage from "../pages/post/PostSessionPage";
 import SOSPage from "../pages/sos/SOSPage";
 import GroundingPage from "../pages/sos/GroundingPage";
 import ChatbotPage from "../pages/sos/ChatbotPage";
+import SessionSuccessPage from "../pages/success/SessionSuccessPage";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: "/sos", element: <SOSPage /> },
       { path: "/sos/ground", element: <GroundingPage /> },
       { path: "/sos/chat", element: <ChatbotPage /> },
+      { path: "/session/success", element: <SessionSuccessPage /> },
     ],
   },
 ]);

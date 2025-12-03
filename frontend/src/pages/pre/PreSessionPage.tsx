@@ -21,7 +21,7 @@ export default function PreSessionPage() {
         type: "pre",
         intention,
       });
-      navigate("/");
+      navigate("/session/success", { state: { type: "pre"} });
     } catch (err) {
       setError("Failed to save your intention. Try again.");
     } finally {
@@ -31,7 +31,7 @@ export default function PreSessionPage() {
 
   return (
     <Page title="Set Your Intention">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       <Textarea
         autoFocus
         placeholder="What’s your intention for this session?"

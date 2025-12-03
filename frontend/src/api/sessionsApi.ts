@@ -13,7 +13,12 @@ export const sessionsApi = {
     emotion?: string | null;
     reflection?: string | null;
   }): Promise<Session> => {
-    const res = await api.post("/sessions", data);
-    return res.data;
+    try {
+      const res = await api.post("/sessions", data);
+      return res.data;
+    } catch (err: any) {
+      console.error("API error creating session:", err);
+      throw err;
+    }
   },
 };
