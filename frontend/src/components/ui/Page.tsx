@@ -18,10 +18,10 @@ export default function Page({ title, children }: PageProps) {
           {title}
         </h1>
       )}
-  
+
       <div className="space-y-6">
         {children}
       </div>
     </div>
-  );  
+  );
 }

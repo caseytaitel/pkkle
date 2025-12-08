@@ -32,16 +32,16 @@ export default function PreSessionPage() {
   return (
     <Page title="Set Your Intention">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <Textarea
+        <Textarea
         autoFocus
         placeholder="What’s your intention for this session?"
         value={intention}
         onChange={(e) => setIntention(e.target.value)}
         required
-      />
+        />
 
         {error && <p className="text-red-600">{error}</p>}
-  
+
         <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Intention"}
         </Button>

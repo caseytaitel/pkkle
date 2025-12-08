@@ -8,7 +8,7 @@ export default function SOSPage() {
       <h1 className="text-2xl font-semibold">SOS Reset</h1>
 
       <p className="text-gray-600 text-lg">
-        Feeling overwhelmed?  
+        Feeling overwhelmed?
         Start a quick grounding exercise to reset your mind.
       </p>
 

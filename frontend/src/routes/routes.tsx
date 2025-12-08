@@ -11,7 +11,7 @@ import SessionSuccessPage from "../pages/success/SessionSuccessPage";
 
 export const router = createBrowserRouter([
   {
-    element: <RootLayout />,   // <-- layout wrapper
+    element: <RootLayout />,
     children: [
       { path: "/", element: <TodayPage /> },
       { path: "/pre", element: <PreSessionPage /> },

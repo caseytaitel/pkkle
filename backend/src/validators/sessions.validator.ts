@@ -17,7 +17,7 @@ export const createSessionSchema = z.object({
   },
   {
     message: "Invalid session data for the given type.",
-    path: ["type"], 
+    path: ["type"],
   }
 );
 

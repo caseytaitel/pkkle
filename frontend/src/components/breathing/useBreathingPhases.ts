@@ -11,6 +11,7 @@ interface UseBreathingPhasesOptions {
   phaseDurationMs?: number;
   totalCycles?: number;
   autoStart?: boolean;
+  paused?: boolean;
   onComplete?: () => void;
 }
 
@@ -21,9 +22,9 @@ interface BreathingState {
 }
 
 const PHASES: BreathingPhase[] = [
-  { key: "inhale",    label: "Breathe in" },
-  { key: "holdFull",  label: "Hold" },
-  { key: "exhale",    label: "Breathe out" },
+  { key: "inhale", label: "Breathe in" },
+  { key: "holdFull", label: "Hold" },
+  { key: "exhale", label: "Breathe out" },
   { key: "holdEmpty", label: "Hold" },
 ];
 
@@ -34,6 +35,7 @@ export function useBreathingPhases(
     phaseDurationMs = 4000,
     totalCycles = 3,
     autoStart = true,
+    paused = false,
     onComplete,
   } = options;
 
@@ -42,28 +44,25 @@ export function useBreathingPhases(
 
   useEffect(() => {
     if (!autoStart) return;
+    if (paused) return;
 
     const timer = setTimeout(() => {
-      const nextPhaseIndex = (phaseIndex + 1) % PHASES.length;
+      const nextIndex = (phaseIndex + 1) % PHASES.length;
 
-      // If we wrapped back to phase 0, we completed a cycle
-      if (nextPhaseIndex === 0) {
+      if (nextIndex === 0) {
         if (cycle < totalCycles) {
-          setCycle((prev) => prev + 1);
+          setCycle((c) => c + 1);
         } else {
-          // completed all cycles
-          if (onComplete) {
-            onComplete();
-          }
+          onComplete?.();
           return;
         }
       }
 
-      setPhaseIndex(nextPhaseIndex);
+      setPhaseIndex(nextIndex);
     }, phaseDurationMs);
 
     return () => clearTimeout(timer);
-  }, [autoStart, cycle, phaseDurationMs, phaseIndex, totalCycles, onComplete]);
+  }, [autoStart, paused, phaseDurationMs, phaseIndex, cycle, totalCycles, onComplete]);
 
   return {
     phase: PHASES[phaseIndex],

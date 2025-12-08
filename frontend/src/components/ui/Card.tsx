@@ -8,3 +8,4 @@ export function Card({ children, className }: { children: ReactNode; className?:
     </div>
   );
 }
+

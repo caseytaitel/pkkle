@@ -16,7 +16,6 @@ export default function TodayPage() {
   useEffect(() => {
     if (location.state?.justCompleted) {
       setJustCompleted(location.state.justCompleted);
-      // clear state so refresh doesn't retrigger
       window.history.replaceState({}, "");
     }
   }, []);
@@ -41,7 +40,7 @@ export default function TodayPage() {
         <div className="loader" />
       </div>
     );
-  }  
+  }
 
   const hasPre = sessions.some((s) => s.type === "pre");
   const hasPost = sessions.some((s) => s.type === "post");
@@ -71,13 +70,12 @@ export default function TodayPage() {
   return (
     <Page title="Today">
       <div className="space-y-6">
-  
         {!hasPre && (
           <Button className="w-full" onClick={() => navigate("/pre")}>
             Start Pre-Session
           </Button>
         )}
-  
+
         {hasPre && (
           <div
             className={clsx(
@@ -86,10 +84,15 @@ export default function TodayPage() {
               justCompleted === "pre" && "animate-subtle-pop"
             )}
           >
-            <p className="font-medium">Pre-session complete ✔</p>
+            <p className="font-medium inline-flex items-center gap-1">
+              Pre-session complete
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px]">
+                ✓
+              </span>
+            </p>
           </div>
         )}
-  
+
         {!hasPost && hasPre && (
           <Button className="w-full" onClick={() => navigate("/post")}>
             Finish Post-Session
@@ -110,8 +113,7 @@ export default function TodayPage() {
             </p>
           </div>
         )}
-  
       </div>
     </Page>
-  );  
+  );
 }

@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import "./config/env"; 
+import "./config/env";
 import sessionsRouter from "./routes/sessions.routes";
 
 const app = express();

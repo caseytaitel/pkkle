@@ -23,3 +23,4 @@ export function useToday() {
 
   return { sessions, loading };
 }
+

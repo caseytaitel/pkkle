@@ -13,7 +13,7 @@ export default function SessionSuccessPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/");
-    }, 1200); // ~1.2s feels crisp
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [navigate]);
@@ -28,10 +28,10 @@ export default function SessionSuccessPage() {
 
   return (
     <Page>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center animate-success-pop">
-                <span className="text-3xl">✔</span>
-            </div>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center animate-success-pop">
+          <span className="text-3xl">✔</span>
+        </div>
 
         <h1 className="text-xl font-semibold tracking-tight">
           {title}
