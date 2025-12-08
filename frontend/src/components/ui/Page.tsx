@@ -12,16 +12,16 @@ export default function Page({ title, children }: PageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen px-6 pt-[calc(1rem+var(--safe-top))] pb-[calc(5rem+var(--safe-bottom))] space-y-8 bg-white animate-fade-in">
+    <div className="min-h-screen px-6 pt-[calc(1rem+var(--safe-top))] pb-[calc(6rem+var(--safe-bottom))] bg-white animate-fade-in">
       {title && (
-        <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
+        <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)] mb-4">
           {title}
         </h1>
       )}
-
+  
       <div className="space-y-6">
         {children}
       </div>
     </div>
-  );
+  );  
 }

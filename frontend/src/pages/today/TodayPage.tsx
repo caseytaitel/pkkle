@@ -4,6 +4,7 @@ import { sessionsApi } from "../../api/sessionsApi";
 import type { Session } from "../../types/Session";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
+import clsx from "clsx";
 
 export default function TodayPage() {
   const navigate = useNavigate();
@@ -49,19 +50,17 @@ export default function TodayPage() {
   if (!hasPre && !hasPost) {
     return (
       <Page title="Today">
-        <div className="space-y-6 text-center pt-4">
-          <p className="text-gray-600 text-lg">
+        <div className="space-y-6 text-center pt-2">
+          <p className="text-[var(--text-primary)] text-lg font-medium">
             A fresh day. A fresh session.
           </p>
-          <p className="text-gray-500">
+
+          <p className="text-[var(--text-secondary)]">
             Set your intention and step into today with clarity.
           </p>
 
-          <Button
-            className="w-full mt-4"
-            onClick={() => navigate("/pre")}
-          >
-            Start Your First Pre-Session
+          <Button className="w-full mt-2" onClick={() => navigate("/pre")}>
+            Start Pre-Session
           </Button>
         </div>
       </Page>
@@ -71,48 +70,48 @@ export default function TodayPage() {
   // Default Flow
   return (
     <Page title="Today">
-      <div className="space-y-4">
-
+      <div className="space-y-6">
+  
         {!hasPre && (
-          <Button onClick={() => navigate("/pre")}>
+          <Button className="w-full" onClick={() => navigate("/pre")}>
             Start Pre-Session
           </Button>
         )}
-
+  
         {hasPre && (
           <div
-            className={
-              "p-4 bg-green-100 text-green-800 rounded-lg " +
-              (justCompleted === "pre" ? "animate-subtle-pop" : "")
-            }
+            className={clsx(
+              "rounded-xl p-4 bg-green-50 border border-green-100",
+              "text-green-800 shadow-sm",
+              justCompleted === "pre" && "animate-subtle-pop"
+            )}
           >
-            Pre-session complete ✔
+            <p className="font-medium">Pre-session complete ✔</p>
           </div>
-                  
         )}
-
+  
         {!hasPost && hasPre && (
-          <Button onClick={() => navigate("/post")}>
+          <Button className="w-full" onClick={() => navigate("/post")}>
             Finish Post-Session
           </Button>
         )}
-
+  
         {hasPost && (
           <div
-            className={
-              `p-4 bg-green-100 text-green-800 rounded-lg ${
-                justCompleted === "post" ? "animate-subtle-pop" : ""
-              }`
-            }
+            className={clsx(
+              "rounded-xl p-4 bg-green-50 border border-green-100",
+              "text-green-800 shadow-sm",
+              justCompleted === "post" && "animate-subtle-pop"
+            )}
           >
-            <p className="text-green-800 font-medium">All done for today 🙌</p>
+            <p className="font-semibold">All done for today 🙌</p>
             <p className="text-green-700 text-sm mt-1">
               Come back tomorrow to log a new session.
             </p>
           </div>
         )}
-
+  
       </div>
     </Page>
-  );
+  );  
 }

@@ -1,68 +1,32 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const PHASES = [
-  { label: "Breathe in", duration: 4000 },
-  { label: "Hold", duration: 2000 },
-  { label: "Breathe out", duration: 4000 },
-];
+import { useBreathingPhases } from "../../components/breathing/useBreathingPhases";
+import { BreathingVisual } from "../../components/breathing/BreathingVisual";
 
 export default function GroundingPage() {
   const navigate = useNavigate();
-  const [phaseIndex, setPhaseIndex] = useState(0);
-  const [cycle, setCycle] = useState(1);
-  const [scale, setScale] = useState("scale-75");
 
-  useEffect(() => {
-    const current = PHASES[phaseIndex];
-
-    // Animation
-    if (current.label === "Breathe in") setScale("scale-125");
-    if (current.label === "Hold") setScale("scale-125");
-    if (current.label === "Breathe out") setScale("scale-75");
-
-    const timer = setTimeout(() => {
-      const next = phaseIndex + 1;
-
-      if (next < PHASES.length) {
-        setPhaseIndex(next);
-      } else {
-        // Completed a full cycle
-        if (cycle < 3) {
-          setCycle(cycle + 1);
-          setPhaseIndex(0);
-        } else {
-          navigate("/sos/chat");
-        }
-      }
-    }, current.duration);
-
-    return () => clearTimeout(timer);
-  }, [phaseIndex, cycle, navigate]);
+  const { phase, cycle, totalCycles } = useBreathingPhases({
+    phaseDurationMs: 4000,
+    totalCycles: 3,
+    onComplete: () => {
+      navigate("/sos/chat");
+    },
+  });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center space-y-6">
-      
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center space-y-8">
       <h1 className="text-2xl font-semibold tracking-tight">
         Grounding
       </h1>
 
       <p className="text-lg text-gray-600">
-        {PHASES[phaseIndex].label}
+        {phase.label}
       </p>
 
-      {/* Breathing Circle */}
-      <div
-        className={`
-          w-48 h-48 rounded-full transition-transform duration-[4000ms]
-          ${scale}
-          animate-soft-pulse
-        `}
-        style={{ backgroundColor: "#87B8D5" }}
-      />
+      <BreathingVisual phaseKey={phase.key} />
 
-      <p className="text-gray-500 text-sm mt-2">
-        Cycle {cycle} of 3
+      <p className="text-gray-500 text-sm">
+        Cycle {cycle} of {totalCycles}
       </p>
     </div>
   );

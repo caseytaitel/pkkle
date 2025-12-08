@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white/90 backdrop-blur-sm pb-[calc(0.5rem+var(--safe-bottom))]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white/95 backdrop-blur-sm shadow-[0_-1px_4px_rgba(0,0,0,0.05)] pb-[calc(0.75rem+var(--safe-bottom))]">
       <div className="max-w-md mx-auto flex">
         <NavItem to="/" label="Today" />
         <NavItem to="/sos" label="SOS" />
@@ -23,9 +23,9 @@ function NavItem({ to, label }: NavItemProps) {
       to={to}
       className={({ isActive }) =>
         clsx(
-          "flex-1 py-3 text-center text-sm font-medium",
+          "flex-1 py-3.5 text-center text-sm font-semibold tracking-tight",
           "transition-colors",
-          isActive ? "text-black" : "text-gray-500"
+          isActive ? "text-black" : "text-gray-400"
         )
       }
     >
@@ -34,8 +34,8 @@ function NavItem({ to, label }: NavItemProps) {
           <span>{label}</span>
           <span
             className={clsx(
-              "h-1 w-8 rounded-full transition-all",
-              isActive ? "bg-black" : "bg-transparent"
+              "h-1 w-8 rounded-full transition-all duration-300",
+              isActive ? "bg-black" : "bg-black/10"
             )}
           />
         </div>

@@ -1,5 +1,7 @@
+/* Tailwind Base Layer                             */
 @tailwind base;
 
+/* Global Variables                                */
 :root {
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
@@ -9,116 +11,172 @@
   --bg-soft: #f9fafb;
 }
 
+/* Global Element Rules                            */
+
+/* Prevent scrollbar layout shift across pages */
+html {
+  overflow-y: scroll;
+}
+
+/* Scrolling + touch behavior */
+html,
+body {
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Global background */
+body {
+  background: white;
+}
+
+/* Tailwind Base Layer Overrides (Typography, etc.) */
 @layer base {
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont;
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
-  p, span, label {
+  p,
+  span,
+  label {
     color: var(--text-secondary);
     font-weight: 400;
     letter-spacing: -0.005em;
   }
 }
 
+/* Tailwind Components & Utilities                 */
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  overscroll-behavior-y: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  background: white;
-}
-
-.page-enter {
-    opacity: 0;
-    transform: translateY(6px);
+/* Ring Glow                                  */
+@keyframes holdHaloPulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
   }
-  
-  .page-enter-active {
+  50% {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+}
+
+/* Page Transition Classes                         */
+.page-enter {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+/* Global Animations                               */
+/* Gentle inward-outward halo pulse */
+@keyframes halo-breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.52;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.52;
+  }
+}
+
+.halo-pulse {
+  animation: halo-breathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Fade-in */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 120ms ease, transform 120ms ease;
-  }  
+  }
+}
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .animate-fade-in {
-    animation: fade-in 0.35s ease-out both;
-  }
-  
-  @keyframes soft-pulse {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.15); }
-    100% { filter: brightness(1); }
-  }
-  
-  .animate-soft-pulse {
-    animation: soft-pulse 6s ease-in-out infinite;
-  }
-  
-  @keyframes success-pop {
-    0% {
-      transform: scale(0.4);
-      opacity: 0;
-    }
-    60% {
-      transform: scale(1.15);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  
-  .animate-success-pop {
-    animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out both;
+}
 
-  @keyframes subtle-pop {
-    0% { transform: scale(0.92); opacity: 0.2; }
-    45% { transform: scale(1.07); opacity: 1; }
-    100% { transform: scale(1); }
-  }
-  
-  .animate-subtle-pop {
-    animation: subtle-pop 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-  }  
-  
-  .animate-subtle-pop {
-    animation: subtle-pop 0.25s ease-out both;
-  }  
+/* Soft pulse */
+@keyframes soft-pulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+  100% { filter: brightness(1); }
+}
 
-  .success-check {
-    animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }  
-  
-  @keyframes subtle-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.animate-soft-pulse {
+  animation: soft-pulse 6s ease-in-out infinite;
+}
+
+/* Success pop */
+@keyframes success-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
   }
-  
-  .loader {
-    width: 32px;
-    height: 32px;
-    border: 3px solid #e5e7eb; /* gray-300 */
-    border-top-color: #000;    /* black accent */
-    border-radius: 50%;
-    animation: subtle-spin 0.9s linear infinite;
-    margin: 0 auto;
-  }  
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-success-pop {
+  animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.success-check {
+  animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Subtle pop */
+@keyframes subtle-pop {
+  0% { transform: scale(0.92); opacity: 0.2; }
+  45% { transform: scale(1.07); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.animate-subtle-pop {
+  animation: subtle-pop 0.25s ease-out both;
+}
+
+/* Loader spin */
+@keyframes subtle-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb; /* gray-300 */
+  border-top-color: #000;    /* black accent */
+  border-radius: 50%;
+  animation: subtle-spin 0.9s linear infinite;
+  margin: 0 auto;
+}

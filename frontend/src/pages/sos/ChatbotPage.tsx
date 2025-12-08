@@ -10,22 +10,26 @@ export default function ChatbotPage() {
 
   return (
     <Page title="Reflect">
-      <p className="text-gray-700 leading-relaxed mb-2">
+      <p className="text-[var(--text-secondary)] leading-relaxed">
         What’s coming up for you right now?
         You can write as much or as little as you’d like.
       </p>
 
-      <Textarea
-        className="h-40"
-        autoFocus
-        placeholder="Write anything on your mind..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+      <div className="animate-fade-in delay-100">
+        <Textarea
+          className="h-40 mt-2"
+          autoFocus
+          placeholder="Write anything on your mind..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
 
-      <Button onClick={() => navigate("/")}>
-        Done
-      </Button>
+      <div className="pt-2">
+        <Button className="w-full" onClick={() => navigate("/")}>
+          Done
+        </Button>
+      </div>
     </Page>
   );
 }
