@@ -10,33 +10,30 @@ export default function ChatbotPage() {
 
   return (
     <Page title="Reflect">
-      <div className="text-left w-full mb-1">
-        <p className="text-[var(--text-secondary)]">
+      <div>
+        <p className="text-[var(--text-secondary)] leading-relaxed flex items-center gap-1">
           Nice work — grounding complete
-          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px] ml-1">
+          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px]">
             ✓
           </span>
         </p>
-        <p className="text-[var(--text-secondary)]">
+
+        <p className="text-[var(--text-secondary)] leading-relaxed mt-3 mb-1">
           What’s coming up for you right now?
         </p>
       </div>
 
-      <div className="animate-fade-in delay-100">
-        <Textarea
-          className="h-40"
-          autoFocus
-          placeholder="Write anything on your mind..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-      </div>
+      <Textarea
+        className="h-40 mt-1"
+        autoFocus
+        placeholder="Write anything on your mind..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
 
-      <div className="pt-2">
-        <Button className="w-full" onClick={() => navigate("/")}>
-          Done
-        </Button>
-      </div>
+      <Button className="w-full" onClick={() => navigate("/")}>
+        Done
+      </Button>
     </Page>
   );
 }

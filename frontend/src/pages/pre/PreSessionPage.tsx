@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
@@ -11,7 +11,7 @@ export default function PreSessionPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);

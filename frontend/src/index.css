@@ -7,8 +7,6 @@
   --safe-bottom: env(safe-area-inset-bottom);
   --text-primary: #111111;
   --text-secondary: #555555;
-  --text-muted: #777777;
-  --bg-soft: #f9fafb;
 }
 
 /* Global Element Rules                            */
@@ -41,7 +39,10 @@ body {
     color: var(--text-primary);
   }
 
-  p,
+  p {
+    line-height: 1.55;
+  }
+
   span,
   label {
     color: var(--text-secondary);
@@ -53,18 +54,6 @@ body {
 /* Tailwind Components & Utilities                 */
 @tailwind components;
 @tailwind utilities;
-
-/* Page Transition Classes                         */
-.page-enter {
-  opacity: 0;
-  transform: translateY(6px);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 120ms ease, transform 120ms ease;
-}
 
 /* Global Animations                               */
 /* Fade-in */
@@ -91,7 +80,7 @@ body {
 
 .fade-slow-delay {
   opacity: 0;
-  animation: fadeSlow 1200ms ease 300ms forwards;
+  animation: fadeSlow 1400ms ease 500ms forwards;
 }
 
 @keyframes fadeSlow {
@@ -112,13 +101,15 @@ body {
 
 /* INVISIBLE MORPH */
 .label-morph-out {
-  letter-spacing: 0.1px;
-  transition: letter-spacing 50ms ease;
+  letter-spacing: 0.05px;
+  opacity: 0.96;
+  transition: letter-spacing 90ms ease, opacity 90ms ease;
 }
 
 .label-morph-in {
   letter-spacing: 0px;
-  transition: letter-spacing 90ms ease;
+  opacity: 1;
+  transition: letter-spacing 120ms ease, opacity 120ms ease;
 }
 
 /* ORB VISIBILITY STATES */
@@ -128,7 +119,7 @@ body {
 
 .orb-enter-slow {
   opacity: 0;
-  animation: orbEnterSlow 2200ms ease-out forwards;
+  animation: orbEnterSlow 2200ms ease-in-out forwards;
 }
 
 @keyframes orbEnterSlow {
@@ -140,21 +131,6 @@ body {
     opacity: 1;
     transform: scale(1);
   }
-}
-
-/* EXIT TRANSITION FOR END OF GROUNDING */
-.ground-exit {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-.ground-exit .orb-enter-slow,
-.ground-exit svg {
-  opacity: 0 !important;
-}
-
-.ground-exit p {
-  opacity: 0;
 }
 
 /* Success pop */
@@ -173,10 +149,6 @@ body {
 }
 
 .animate-success-pop {
-  animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.success-check {
   animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 

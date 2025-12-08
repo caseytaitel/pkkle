@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
 import Page from "../../components/ui/Page";
-import { EMOTIONS } from "../../constants/emotions";
+import { EMOTIONS, type Emotion } from "../../constants/emotions";
 import { Button } from "../../components/ui/Button";
 import { Textarea } from "../../components/ui/Textarea";
 import { useNavigate } from "react-router-dom";
 
 export default function PostSessionPage() {
-  const [emotion, setEmotion] = useState("");
+  const [emotion, setEmotion] = useState<Emotion | "">("");
   const [reflection, setReflection] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -43,7 +43,7 @@ export default function PostSessionPage() {
           <select
             className="border rounded p-3 text-lg bg-white"
             value={emotion}
-            onChange={(e) => setEmotion(e.target.value)}
+            onChange={(e) => setEmotion(e.target.value as Emotion)}
             required
           >
             <option value="" disabled>

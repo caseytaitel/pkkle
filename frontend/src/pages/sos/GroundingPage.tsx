@@ -6,7 +6,6 @@ import { BreathingVisual } from "../../components/breathing/BreathingVisual";
 export default function GroundingPage() {
   const navigate = useNavigate();
 
-  // Delay the exercise start
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
@@ -14,22 +13,16 @@ export default function GroundingPage() {
     return () => clearTimeout(t);
   }, []);
 
-  // Breathing engine
   const { phase, cycle, totalCycles } = useBreathingPhases({
     phaseDurationMs: 4000,
     totalCycles: 3,
     paused: !hasStarted,
-    onComplete: () => {
-      setIsExiting(true);
-      setTimeout(() => navigate("/sos/chat"), 450); 
-    },    
+    onComplete: () => navigate("/sos/chat"),
   });
 
-  // Label animation logic
   const [displayLabel, setDisplayLabel] = useState("");
   const [hasAnimatedOnce, setHasAnimatedOnce] = useState(false);
   const [textClass, setTextClass] = useState("");
-  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     if (!hasStarted) {
@@ -57,35 +50,26 @@ export default function GroundingPage() {
   const showIntroMessage = !hasStarted;
 
   return (
-    <div
-      className={`flex flex-col px-6 py-10 text-center min-h-screen transition-all duration-500 ${
-        isExiting ? "ground-exit" : ""
-      }`}
-    >
-      {/* Title stays fixed at the top */}
-      <h1 className="text-2xl font-semibold tracking-tight">Grounding</h1>
+    <div className="flex flex-col px-6 py-10 text-center min-h-screen">
+      <h1 className="text-2xl mb-6">Grounding</h1>
 
-      {/* Main content area: centers intro OR centers breathing */}
       <div className="flex-1 flex flex-col items-center justify-center space-y-8">
-        {/* Intro prompt (centered vertically) */}
         {showIntroMessage ? (
-          <p className="text-gray-600 italic text-base fade-slow">
+          <p className="italic text-base fade-slow text-[var(--text-secondary)]">
             Your first breath begins in a moment...
           </p>
         ) : (
-          <p className={`text-lg text-gray-600 ${textClass}`}>
+          <p className={`text-lg text-[var(--text-secondary)] ${textClass}`}>
             {displayLabel}
           </p>
         )}
 
-        {/* Orb (hidden during intro) */}
         {!showIntroMessage && (
           <BreathingVisual phaseKey={phase.key} paused={!hasStarted} />
         )}
 
-        {/* Cycle count (hidden during intro) */}
         {!showIntroMessage && (
-          <p className="text-gray-500 text-sm fade-slow-delay">
+          <p className="text-sm fade-slow-delay text-[var(--text-secondary)]">
             Cycle {cycle} of {totalCycles}
           </p>
         )}

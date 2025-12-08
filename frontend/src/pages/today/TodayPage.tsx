@@ -45,7 +45,6 @@ export default function TodayPage() {
   const hasPre = sessions.some((s) => s.type === "pre");
   const hasPost = sessions.some((s) => s.type === "post");
 
-  // Friendly Empty State
   if (!hasPre && !hasPost) {
     return (
       <Page title="Today">
@@ -54,7 +53,7 @@ export default function TodayPage() {
             A fresh day. A fresh session.
           </p>
 
-          <p className="text-[var(--text-secondary)]">
+          <p className="text-[var(--text-secondary)] text-base">
             Set your intention and step into today with clarity.
           </p>
 
@@ -66,7 +65,6 @@ export default function TodayPage() {
     );
   }
 
-  // Default Flow
   return (
     <Page title="Today">
       <div className="space-y-6">
@@ -79,12 +77,11 @@ export default function TodayPage() {
         {hasPre && (
           <div
             className={clsx(
-              "rounded-xl p-4 bg-green-50 border border-green-100",
-              "text-green-800 shadow-sm",
+              "rounded-xl p-4 bg-green-50 border border-green-100 text-green-800 shadow-sm",
               justCompleted === "pre" && "animate-subtle-pop"
             )}
           >
-            <p className="font-medium inline-flex items-center gap-1">
+            <p className="font-medium inline-flex items-center gap-1 text-green-800">
               Pre-session complete
               <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px]">
                 ✓
@@ -98,17 +95,16 @@ export default function TodayPage() {
             Finish Post-Session
           </Button>
         )}
-  
+
         {hasPost && (
           <div
             className={clsx(
-              "rounded-xl p-4 bg-green-50 border border-green-100",
-              "text-green-800 shadow-sm",
+              "rounded-xl p-4 bg-green-50 border border-green-100 text-green-800 shadow-sm",
               justCompleted === "post" && "animate-subtle-pop"
             )}
           >
             <p className="font-semibold">All done for today 🙌</p>
-            <p className="text-green-700 text-sm mt-1">
+            <p className="text-sm mt-1 text-green-700">
               Come back tomorrow to log a new session.
             </p>
           </div>

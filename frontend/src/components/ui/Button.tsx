@@ -10,11 +10,13 @@ export function Button({ variant = "primary", className, ...props }: Props) {
     <button
       className={clsx(
         "px-4 py-3 rounded-xl font-medium transition",
-        "active:scale-[0.97] duration-150",                  // micro press animation
-        "disabled:opacity-50 disabled:cursor-not-allowed",   // disabled polish
+        "active:scale-[0.97] duration-150",
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+
         variant === "primary"
-          ? "bg-black text-white hover:bg-gray-900"
+          ? "bg-black text-white hover:bg-black/90"
           : "bg-gray-100 text-[var(--text-primary)] hover:bg-gray-200",
+
         className
       )}
       {...props}

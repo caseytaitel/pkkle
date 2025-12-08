@@ -1,11 +1,10 @@
 export const EMOTIONS = [
-  "calm",
-  "confident",
+  "happy",
   "focused",
-  "neutral",
   "frustrated",
-  "anxious",
-  "excited",
+  "proud",
+  "tired",
+  "neutral",
 ] as const;
 
-export type Emotion = (typeof EMOTIONS)[number];  
+export type Emotion = typeof EMOTIONS[number];

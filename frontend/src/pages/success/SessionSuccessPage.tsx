@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import type { SessionType } from "../../types/Session";
 import Page from "../../components/ui/Page";
-
-type SuccessType = "pre" | "post";
 
 export default function SessionSuccessPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = (location.state as { type?: SuccessType } | null) ?? {};
-  const type: SuccessType = state.type === "post" ? "post" : "pre";
+  const state = (location.state as { type?: SessionType } | null) ?? {};
+  const type: SessionType = state.type === "post" ? "post" : "pre";
 
   useEffect(() => {
     const timer = setTimeout(() => {
