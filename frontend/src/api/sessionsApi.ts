@@ -4,6 +4,7 @@ import type { Session, SessionType } from "../types/Session";
 export interface CreateSessionInput {
   type: SessionType;
   intention?: string | null;
+  secondaryIntention?: string | null;
   emotion?: string | null;
   reflection?: string | null;
 }
