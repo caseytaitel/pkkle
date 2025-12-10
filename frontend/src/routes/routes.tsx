@@ -7,6 +7,7 @@ import PostSessionPage from "../pages/post/PostSessionPage";
 import CenterPage from "../pages/center/CenterPage";
 import CenterGroundingPage from "../pages/center/CenterGroundingPage";
 import CenterChatPage from "../pages/center/CenterChatPage";
+import CenterRedoPage from "../pages/center/CenterRedoPage";
 import SessionSuccessPage from "../pages/success/SessionSuccessPage";
 
 export const router = createBrowserRouter([
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
       { path: "/center", element: <CenterPage /> },
       { path: "/center/ground", element: <CenterGroundingPage /> },
       { path: "/center/chat", element: <CenterChatPage /> },
+      { path: "/center/redo", element: <CenterRedoPage /> },
       { path: "/session/success", element: <SessionSuccessPage /> },
     ],
   },

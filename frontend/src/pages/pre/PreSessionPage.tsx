@@ -17,7 +17,6 @@ export default function PreSessionPage() {
 
   // Submit handler — kept but NOT fully wired yet
   async function handleSubmit(e: FormEvent) {
-    console.log("SUBMIT FIRED");
     e.preventDefault();
     setError("");
     setLoading(true);

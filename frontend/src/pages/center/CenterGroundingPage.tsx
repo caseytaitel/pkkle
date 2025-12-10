@@ -1,23 +1,35 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useBreathingPhases } from "../../components/breathing/useBreathingPhases";
 import { BreathingVisual } from "../../components/breathing/BreathingVisual";
 
 export default function CenterGroundingPage() {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isRedo = location.state?.redo === true;
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
+    if (isRedo) {
+      setHasStarted(true);
+      return;
+    }
+  
     const t = setTimeout(() => setHasStarted(true), 3000);
     return () => clearTimeout(t);
-  }, []);
+  }, [isRedo]);  
 
   const { phase, cycle, totalCycles } = useBreathingPhases({
     phaseDurationMs: 4000,
     totalCycles: 3,
     paused: !hasStarted,
-    onComplete: () => navigate("/center/chat"),
+    onComplete: () => {
+      if (isRedo) {
+        navigate("/center/chat");
+      } else {
+        navigate("/center/redo");
+      }
+    }    
   });
 
   const [displayLabel, setDisplayLabel] = useState("");
@@ -28,6 +40,7 @@ export default function CenterGroundingPage() {
     if (!hasStarted) {
       setDisplayLabel("");
       setTextClass("");
+      setHasAnimatedOnce(false);
       return;
     }
 
@@ -47,7 +60,7 @@ export default function CenterGroundingPage() {
     return () => clearTimeout(t);
   }, [phase.key, hasStarted, hasAnimatedOnce]);
 
-  const showIntroMessage = !hasStarted;
+  const showIntroMessage = !hasStarted && !isRedo;
 
   return (
     <div className="flex flex-col px-6 py-10 text-center min-h-screen">
