@@ -4,16 +4,14 @@ import BottomNav from "../components/navigation/BottomNav";
 export default function RootLayout() {
   const { pathname } = useLocation();
 
-  // Define exactly which routes should hide the nav
   const hideNavOn = [
     "/pre",
     "/post",
-    "/sos/ground",
-    "/sos/chat",
+    "/center/ground",
+    "/center/chat",
     "/session/success",
   ];
 
-  // Should navbar be hidden?
   const hideNav = hideNavOn.some(path => pathname.startsWith(path));
 
   return (

@@ -12,7 +12,7 @@ export default function Page({ title, children }: PageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen px-6 pt-6 pb-[calc(6rem+var(--safe-bottom))] bg-white animate-fade-in">
+    <div className="min-h-screen px-6 pt-[calc(1rem+var(--safe-top))] pb-[calc(6rem+var(--safe-bottom))] bg-white animate-fade-in">
       {title && (
         <h1 className="text-2xl mb-4">{title}</h1>
       )}

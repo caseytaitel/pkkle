@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useBreathingPhases } from "../../components/breathing/useBreathingPhases";
 import { BreathingVisual } from "../../components/breathing/BreathingVisual";
 
-export default function GroundingPage() {
+export default function CenterGroundingPage() {
   const navigate = useNavigate();
 
   const [hasStarted, setHasStarted] = useState(false);
@@ -17,7 +17,7 @@ export default function GroundingPage() {
     phaseDurationMs: 4000,
     totalCycles: 3,
     paused: !hasStarted,
-    onComplete: () => navigate("/sos/chat"),
+    onComplete: () => navigate("/center/chat"),
   });
 
   const [displayLabel, setDisplayLabel] = useState("");

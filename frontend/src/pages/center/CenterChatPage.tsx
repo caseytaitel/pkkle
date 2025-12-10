@@ -4,7 +4,7 @@ import Page from "../../components/ui/Page";
 import { Textarea } from "../../components/ui/Textarea";
 import { Button } from "../../components/ui/Button";
 
-export default function ChatbotPage() {
+export default function CenterChatPage() {
   const navigate = useNavigate();
   const [text, setText] = useState("");
 

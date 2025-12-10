@@ -25,6 +25,7 @@ export const sessionsService = {
       data: {
         type: data.type,
         intention: data.intention ?? null,
+        secondaryIntention: data.secondaryIntention ?? null,
         emotion: data.emotion ?? null,
         reflection: data.reflection ?? null,
       },

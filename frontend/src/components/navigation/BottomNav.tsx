@@ -6,7 +6,7 @@ export default function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white/95 backdrop-blur-sm shadow-[0_-1px_4px_rgba(0,0,0,0.05)] pb-[calc(0.75rem+var(--safe-bottom))]">
       <div className="max-w-md mx-auto flex">
         <NavItem to="/" label="Today" />
-        <NavItem to="/sos" label="SOS" />
+        <NavItem to="/center" label="Center" />
       </div>
     </nav>
   );
