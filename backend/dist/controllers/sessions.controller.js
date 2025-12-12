@@ -14,7 +14,6 @@ exports.sessionsController = {
         }
     },
     create: async (req, res, next) => {
-        console.log("REQ BODY:", req.body);
         const parseResult = sessions_validator_1.createSessionSchema.safeParse(req.body);
         if (!parseResult.success) {
             return res.status(400).json({

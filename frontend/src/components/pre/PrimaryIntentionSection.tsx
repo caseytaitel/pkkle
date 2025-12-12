@@ -39,11 +39,15 @@ export function PrimaryIntentionSection({ category, value, onChange }: Props) {
 
   // When typing, clear preset selection
   function handleTextChange(text: string) {
-    if (selectedPreset && text !== selectedPreset) {
-      setSelectedPreset(null);
+    if (selectedPreset) {
+      const startsWithPreset = text.startsWith(selectedPreset);
+  
+      if (text.length === 0 || !startsWithPreset) {
+        setSelectedPreset(null);
+      }
     }
     onChange(text);
-  }
+  }  
 
   // When user taps a preset
   function handlePresetClick(text: string) {
@@ -51,36 +55,37 @@ export function PrimaryIntentionSection({ category, value, onChange }: Props) {
     onChange(text);
   }
 
-  // Character limit
-  const remaining = 500 - value.length;
-
   // No category selected yet
   if (!category) {
-    return (
-      <div className="rounded-xl border p-4 text-gray-500">
-        Select a category to see intention suggestions.
-      </div>
-    );
+    return null;
   }
 
   const presets = PRESETS[category];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div>
         <p className="font-medium text-lg">What’s your focus today?</p>
         <p className="text-sm text-gray-500">Try one of these if you’re not sure where to start.</p>
       </div>
 
       {/* Preset chips */}
-      <div className="flex flex-wrap gap-2">
+      <div
+        className="
+          relative flex gap-2 overflow-x-auto no-scrollbar
+          py-1 pr-2
+          snap-x snap-mandatory
+          after:absolute after:right-0 after:top-0 after:h-full after:w-6
+          after:bg-gradient-to-l after:from-white after:to-transparent
+        "
+      >
         {presets.map((preset) => (
           <button
             key={preset}
             type="button"
             onClick={() => handlePresetClick(preset)}
             className={clsx(
-              "px-3 py-2 rounded-full text-sm border transition",
+              "px-3 py-2 rounded-full text-sm border transition whitespace-nowrap snap-start",
               selectedPreset === preset
                 ? "bg-black text-white border-black"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
@@ -100,13 +105,6 @@ export function PrimaryIntentionSection({ category, value, onChange }: Props) {
           maxLength={500}
           className="mt-2"
         />
-
-        <p className={clsx(
-          "text-right text-sm mt-1",
-          remaining < 0 ? "text-red-600" : "text-gray-400"
-        )}>
-          {remaining} characters remaining
-        </p>
       </div>
     </div>
   );

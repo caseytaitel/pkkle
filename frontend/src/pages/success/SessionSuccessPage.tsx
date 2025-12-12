@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { SessionType } from "../../types/Session";
 import Page from "../../components/ui/Page";
@@ -9,24 +9,26 @@ export default function SessionSuccessPage() {
   const state = (location.state as { type?: SessionType } | null) ?? {};
   const type: SessionType = state.type === "post" ? "post" : "pre";
 
+  const [exiting, setExiting] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/");
-    }, 1200);
+      setExiting(true);
+      setTimeout(() => navigate("/"), 250);
+    }, 1200); // success page display time
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
-  const title =
-    type === "pre" ? "Intention saved" : "Reflection saved";
+  const title = type === "pre" ? "Intention saved" : "Reflection saved";
 
   const subtitle =
     type === "pre"
-      ? "You’re grounded and ready to play."
+      ? "You’re focused and ready to play."
       : "You’ve captured this session. Nice work.";
 
   return (
-    <Page>
+    <Page exiting={exiting}>
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center animate-success-pop">
           <span className="text-3xl">✔</span>

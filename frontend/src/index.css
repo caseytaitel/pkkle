@@ -1,35 +1,32 @@
-/* Tailwind Base Layer                             */
+/* Tailwind base layer */
 @tailwind base;
 
-/* Global Variables                                */
-:root {
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
-  --text-primary: #111111;
-  --text-secondary: #555555;
-}
-
-/* Global Element Rules                            */
-
-/* Prevent scrollbar layout shift across pages */
-html {
-  overflow-y: scroll;
-}
-
-/* Scrolling + touch behavior */
-html,
-body {
-  overscroll-behavior-y: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Global background */
-body {
-  background: white;
-}
-
-/* Tailwind Base Layer Overrides (Typography, etc.) */
+/* Global base styles, variables, typography */
 @layer base {
+  :root {
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+    --text-primary: #111111;
+    --text-secondary: #555555;
+  }
+
+  /* Prevent scrollbar layout shift across pages */
+  html {
+    overflow-y: scroll;
+  }
+
+  /* Scrolling + touch behavior */
+  html,
+  body {
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Global background */
+  body {
+    background: white;
+  }
+
   h1,
   h2,
   h3 {
@@ -51,11 +48,10 @@ body {
   }
 }
 
-/* Tailwind Components & Utilities                 */
+/* Tailwind components & utilities */
 @tailwind components;
 @tailwind utilities;
 
-/* Global Animations                               */
 /* Fade-in */
 @keyframes fade-in {
   from {
@@ -72,7 +68,23 @@ body {
   animation: fade-in 0.35s ease-out both;
 }
 
-/* INTRO TEXT */
+/* Fade-out */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.animate-fade-out {
+  animation: fade-out 0.28s ease-in-out forwards;
+}
+
+/* Intro text (grounding intro) */
 .fade-slow {
   opacity: 0;
   animation: fadeSlow 1200ms ease forwards;
@@ -84,22 +96,34 @@ body {
 }
 
 @keyframes fadeSlow {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* FIRST LABEL APPEARANCE */
+/* First label appearance */
 .label-first-appear {
   opacity: 0;
   animation: firstLabelIn 700ms ease forwards;
 }
 
 @keyframes firstLabelIn {
-  from { opacity: 0; letter-spacing: 0.2px; }
-  to   { opacity: 1; letter-spacing: 0px; }
+  from {
+    opacity: 0;
+    letter-spacing: 0.2px;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0px;
+  }
 }
 
-/* INVISIBLE MORPH */
+/* Label morph transitions */
 .label-morph-out {
   letter-spacing: 0.05px;
   opacity: 0.96;
@@ -112,7 +136,7 @@ body {
   transition: letter-spacing 120ms ease, opacity 120ms ease;
 }
 
-/* ORB VISIBILITY STATES */
+/* Orb visibility states */
 .orb-hidden {
   opacity: 0;
 }
@@ -152,11 +176,19 @@ body {
   animation: success-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Subtle pop */
+/* Subtle pop (today cards, etc.) */
 @keyframes subtle-pop {
-  0% { transform: scale(0.92); opacity: 0.2; }
-  45% { transform: scale(1.07); opacity: 1; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.92);
+    opacity: 0.2;
+  }
+  45% {
+    transform: scale(1.07);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .animate-subtle-pop {
@@ -165,16 +197,30 @@ body {
 
 /* Loader spin */
 @keyframes subtle-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loader {
   width: 32px;
   height: 32px;
   border: 3px solid #e5e7eb; /* gray-300 */
-  border-top-color: #000;    /* black accent */
+  border-top-color: #000; /* black accent */
   border-radius: 50%;
   animation: subtle-spin 0.9s linear infinite;
   margin: 0 auto;
+}
+
+/* Hide scrollbars on horizontal carousels (presets) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

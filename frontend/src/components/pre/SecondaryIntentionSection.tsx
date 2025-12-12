@@ -48,13 +48,15 @@ export function SecondaryIntentionSection({
   }
 
   function handleTextChange(text: string) {
-    if (selectedPreset && text !== selectedPreset) {
-      setSelectedPreset(null);
+    if (selectedPreset) {
+      const startsWithPreset = text.startsWith(selectedPreset);
+  
+      if (text.length === 0 || !startsWithPreset) {
+        setSelectedPreset(null);
+      }
     }
     onChange(text);
   }
-
-  const remaining = 500 - value.length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,7 +75,7 @@ export function SecondaryIntentionSection({
       {open && (
         <div className="flex flex-col gap-4 p-4 border rounded-xl">
 
-          <p className="font-medium text-lg">Optional: Add a second intention</p>
+          <p className="font-medium text-lg">Second Intention</p>
 
           {/* No category yet */}
           {!category && (
@@ -109,15 +111,6 @@ export function SecondaryIntentionSection({
               placeholder="Write your intention…"
               maxLength={500}
             />
-
-            <p
-              className={clsx(
-                "text-right text-sm mt-1",
-                remaining < 0 ? "text-red-600" : "text-gray-400"
-              )}
-            >
-              {remaining} characters remaining
-            </p>
           </div>
         </div>
       )}

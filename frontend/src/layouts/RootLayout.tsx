@@ -7,8 +7,8 @@ export default function RootLayout() {
   const hideNavOn = [
     "/pre",
     "/post",
-    "/center/ground",
-    "/center/chat",
+    "/regulate/ground",
+    "/regulate/chat",
     "/session/success",
   ];
 

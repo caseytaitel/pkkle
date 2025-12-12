@@ -8,18 +8,29 @@ import clsx from "clsx";
 
 export default function TodayPage() {
   const navigate = useNavigate();
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [justCompleted, setJustCompleted] = useState<"pre" | "post" | null>(null);
   const location = useLocation();
 
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [justCompleted, setJustCompleted] =
+    useState<"pre" | "post" | null>(null);
+
+  const [exiting, setExiting] = useState(false);
+
+  function navigateWithFade(path: string) {
+    setExiting(true);
+    setTimeout(() => navigate(path), 250);
+  }
+
+  // detect completion banner
   useEffect(() => {
     if (location.state?.justCompleted) {
       setJustCompleted(location.state.justCompleted);
       window.history.replaceState({}, "");
     }
-  }, []);
+  }, [location.state]);
 
+  // load today's sessions
   useEffect(() => {
     async function load() {
       try {
@@ -45,10 +56,11 @@ export default function TodayPage() {
   const hasPre = sessions.some((s) => s.type === "pre");
   const hasPost = sessions.some((s) => s.type === "post");
 
+  // CASE 1 — no sessions yet
   if (!hasPre && !hasPost) {
     return (
-      <Page title="Today">
-        <div className="space-y-6 text-center pt-2">
+      <Page title="Today" exiting={exiting}>
+        <div className="pt-20 space-y-6 text-center">
           <p className="text-[var(--text-primary)] text-lg font-medium">
             A fresh day. A fresh session.
           </p>
@@ -57,7 +69,10 @@ export default function TodayPage() {
             Set your intention and step into today with clarity.
           </p>
 
-          <Button className="w-full mt-2" onClick={() => navigate("/pre")}>
+          <Button
+            className="w-full mt-2"
+            onClick={() => navigateWithFade("/pre")}
+          >
             Start Pre-Session
           </Button>
         </div>
@@ -65,11 +80,12 @@ export default function TodayPage() {
     );
   }
 
+  // CASE 2 — normal state
   return (
-    <Page title="Today">
-      <div className="space-y-6">
+    <Page title="Today" exiting={exiting}>
+      <div className="pt-20 space-y-6">
         {!hasPre && (
-          <Button className="w-full" onClick={() => navigate("/pre")}>
+          <Button className="w-full" onClick={() => navigateWithFade("/pre")}>
             Start Pre-Session
           </Button>
         )}
@@ -91,7 +107,10 @@ export default function TodayPage() {
         )}
 
         {!hasPost && hasPre && (
-          <Button className="w-full" onClick={() => navigate("/post")}>
+          <Button
+            className="w-full"
+            onClick={() => navigateWithFade("/post")}
+          >
             Finish Post-Session
           </Button>
         )}

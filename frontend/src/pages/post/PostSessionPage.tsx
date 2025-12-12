@@ -12,6 +12,12 @@ export default function PostSessionPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [exiting, setExiting] = useState(false);
+
+  function navigateWithFade(path: string, state?: unknown) {
+    setExiting(true);
+    setTimeout(() => navigate(path, { state }), 250);
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -25,21 +31,21 @@ export default function PostSessionPage() {
         reflection,
       });
 
-      navigate("/session/success", { state: { type: "post" }});
+      navigateWithFade("/session/success", { state: { type: "post" } });
     } catch (err) {
-      setError("Failed to save your reflection. Try again.");
+      setError("Couldn't save. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Page title="Post-Session Reflection">
+    <Page title="Post-Session Reflection" exiting={exiting}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
-        {/* EMOTION DROPDOWN */}
+        {/* Emotion dropdown */}
         <div className="flex flex-col gap-2">
-          <label className="text-lg font-medium">How do you feel?</label>
+          <label className="text-lg font-medium">How was today's play?</label>
           <select
             className="border rounded p-3 text-lg bg-white"
             value={emotion}
@@ -57,9 +63,9 @@ export default function PostSessionPage() {
           </select>
         </div>
 
-        {/* REFLECTION */}
+        {/* Reflection */}
         <Textarea
-          placeholder="Write your reflection…"
+          placeholder="What stood out to you?"
           value={reflection}
           onChange={(e) => setReflection(e.target.value)}
           required

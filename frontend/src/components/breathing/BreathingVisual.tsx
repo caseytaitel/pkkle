@@ -38,7 +38,7 @@ export function BreathingVisual({ phaseKey, paused }: BreathingVisualProps) {
 
   return (
     <div
-      className={`relative flex items-center justify-center ${
+      className={`relative flex items-center justify-center mt-3 ${
         visible ? "orb-enter-slow" : "orb-hidden"
       }`}
     >
@@ -47,9 +47,9 @@ export function BreathingVisual({ phaseKey, paused }: BreathingVisualProps) {
         <div
           className="rounded-full absolute"
           style={{
-            width: ORB_BASE * 1.5,
-            height: ORB_BASE * 1.5,
-            transform: "scale(0.85)",
+            width: ORB_BASE * 1.32,
+            height: ORB_BASE * 1.32,
+            transform: "scale(0.80)",
             background: `
               radial-gradient(
                 circle,
@@ -64,9 +64,9 @@ export function BreathingVisual({ phaseKey, paused }: BreathingVisualProps) {
         <div
           className="rounded-full absolute"
           style={{
-            width: ORB_BASE * 1.37,
-            height: ORB_BASE * 1.37,
-            transform: "scale(0.85)",
+            width: ORB_BASE * 1.22,
+            height: ORB_BASE * 1.22,
+            transform: "scale(0.80)",
             background: `
               radial-gradient(
                 circle,
@@ -81,9 +81,9 @@ export function BreathingVisual({ phaseKey, paused }: BreathingVisualProps) {
         <div
           className="rounded-full absolute"
           style={{
-            width: ORB_BASE * 1.22,
-            height: ORB_BASE * 1.22,
-            transform: "scale(0.85)",
+            width: ORB_BASE * 1.14,
+            height: ORB_BASE * 1.14,
+            transform: "scale(0.82)",
             background: `
               radial-gradient(
                 circle,
