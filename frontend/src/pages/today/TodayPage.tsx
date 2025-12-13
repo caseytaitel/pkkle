@@ -37,7 +37,7 @@ export default function TodayPage() {
         const data = await sessionsApi.getToday();
         setSessions(data);
       } catch (err) {
-        console.error("Failed to load today’s sessions", err);
+        console.error("Couldn't load today's sessions. Please try again.", err);
       } finally {
         setLoading(false);
       }
@@ -60,17 +60,19 @@ export default function TodayPage() {
   if (!hasPre && !hasPost) {
     return (
       <Page title="Today" exiting={exiting}>
-        <div className="pt-20 space-y-6 text-center">
-          <p className="text-[var(--text-primary)] text-lg font-medium">
-            A fresh day. A fresh session.
-          </p>
+        <div className="pt-28 text-center">
+          <div className="space-y-2">
+            <p className="text-[var(--text-primary)] text-lg font-medium">
+              A fresh day. A fresh session.
+            </p>
 
-          <p className="text-[var(--text-secondary)] text-base">
-            Set your intention and step into today with clarity.
-          </p>
+            <p className="text-[var(--text-secondary)] text-base">
+              Set your intention and step into play with clarity.
+            </p>
+          </div>
 
           <Button
-            className="w-full mt-2"
+            className="w-full mt-7"
             onClick={() => navigateWithFade("/pre")}
           >
             Start Pre-Session
@@ -83,7 +85,7 @@ export default function TodayPage() {
   // CASE 2 — normal state
   return (
     <Page title="Today" exiting={exiting}>
-      <div className="pt-20 space-y-6">
+      <div className="pt-28 space-y-6">
         {!hasPre && (
           <Button className="w-full" onClick={() => navigateWithFade("/pre")}>
             Start Pre-Session

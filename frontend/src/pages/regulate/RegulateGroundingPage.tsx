@@ -9,7 +9,6 @@ export default function RegulateGroundingPage() {
 
   const isRedo = location.state?.redo === true;
   const [hasStarted, setHasStarted] = useState(false);
-
   const [exiting, setExiting] = useState(false);
 
   // Start delay (skipped on redo)
@@ -30,13 +29,13 @@ export default function RegulateGroundingPage() {
     paused: !hasStarted,
     onComplete: () => {
       setExiting(true);
-    
+
       const t = setTimeout(() => {
         navigate("/regulate/redo");
       }, 250);
-    
+
       return () => clearTimeout(t);
-    }    
+    },
   });
 
   // Breathing text label transitions
@@ -79,9 +78,9 @@ export default function RegulateGroundingPage() {
     >
       <h1 className="text-2xl mb-4">Regulating</h1>
 
-      <div className="flex-1 flex flex-col items-center justify-center space-y-10">
+      <div className="flex-1 flex flex-col items-center justify-center space-y-10 -mt-6">
         {showIntroMessage ? (
-          <p className="italic text-base fade-slow text-[var(--text-secondary)] leading-relaxed">
+          <p className="italic text-base fade-slow text-[var(--text-secondary)] leading-relaxed -mt-4">
             Your first breath begins in a moment...
           </p>
         ) : (

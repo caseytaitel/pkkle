@@ -29,19 +29,19 @@ export default function SessionSuccessPage() {
 
   return (
     <Page exiting={exiting}>
-      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 mt-6">
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center animate-success-pop">
           <span className="text-3xl">✔</span>
         </div>
-
+      
         <h1 className="text-xl font-semibold tracking-tight">
           {title}
         </h1>
-
+      
         <p className="text-gray-600 text-center px-6">
           {subtitle}
         </p>
       </div>
     </Page>
-  );
+  );   
 }

@@ -25,7 +25,9 @@ export function CategorySelector({ value, onChange }: CategorySelectorProps) {
             key={opt.value}
             onClick={() => onChange(opt.value)}
             className={clsx(
-              "flex-1 py-3 text-center text-sm font-medium transition",
+                "flex-1 py-3 text-center text-sm font-medium",
+                "transition duration-150 active:scale-[0.97]",
+                "rounded-none first:rounded-l-xl last:rounded-r-xl",
               active
                 ? "bg-black text-white"
                 : "text-gray-600 hover:bg-gray-100",

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useRef } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
@@ -17,8 +17,10 @@ export default function PreSessionPage() {
   const [secondaryIntention, setSecondaryIntention] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showPending, setShowPending] = useState(false);
+  const pendingTimerRef = useRef<number | null>(null);
 
+  const [error, setError] = useState("");
   const [exiting, setExiting] = useState(false);
 
   function navigateWithFade(path: string, state?: unknown) {
@@ -31,6 +33,10 @@ export default function PreSessionPage() {
     setError("");
     setLoading(true);
 
+    pendingTimerRef.current = window.setTimeout(() => {
+      setShowPending(true);
+    }, 300);
+
     try {
       await sessionsApi.create({
         type: "pre",
@@ -42,8 +48,12 @@ export default function PreSessionPage() {
 
       navigateWithFade("/session/success", { state: { type: "pre" } });
     } catch (err) {
-      setError("Couldn't save. Try again.");
+      setError("Couldn't save. Please try again.");
     } finally {
+      if (pendingTimerRef.current) {
+        clearTimeout(pendingTimerRef.current);
+      }
+      setShowPending(false);
       setLoading(false);
     }
   }
@@ -56,13 +66,15 @@ export default function PreSessionPage() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 px-4 pb-40"
       >
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-semibold">Set Your Intention</h1>
+        {/* Subheading */}
+        <div className="mt-0">
+          <h2 className="text-base font-medium text-[var(--text-primary)]">
+            Set Your Intention
+          </h2>
         </div>
 
         {/* Category Selector */}
-        <div className="mt-1">
+        <div className="mt-2">
           <CategorySelector
             value={category}
             onChange={(c) => {
@@ -101,13 +113,11 @@ export default function PreSessionPage() {
           type="submit"
           form="pre-session-form"
           disabled={loading || !category || intention.trim().length === 0}
-          className="w-full"
+          className={`w-full ${showPending ? "opacity-80" : ""}`}
         >
-          {loading
-            ? "Saving..."
-            : secondaryIntention.trim().length > 0
-              ? "Set Intentions"
-              : "Set Intention"}
+          {secondaryIntention.trim().length > 0
+            ? "Set Intentions"
+            : "Set Intention"}
         </Button>
       </div>
     </Page>
