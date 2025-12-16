@@ -4,6 +4,7 @@ import RootLayout from "../layouts/RootLayout";
 import TodayPage from "../pages/today/TodayPage";
 import PreSessionPage from "../pages/pre/PreSessionPage";
 import PostSessionPage from "../pages/post/PostSessionPage";
+import HistoryPage from "../pages/history/HistoryPage";
 import RegulatePage from "../pages/regulate/RegulatePage";
 import RegulateGroundingPage from "../pages/regulate/RegulateGroundingPage";
 import RegulateChatPage from "../pages/regulate/RegulateChatPage";
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: "/", element: <TodayPage /> },
       { path: "/pre", element: <PreSessionPage /> },
       { path: "/post", element: <PostSessionPage /> },
+      { path: "/history", element: <HistoryPage /> },
       { path: "/regulate", element: <RegulatePage /> },
       { path: "/regulate/ground", element: <RegulateGroundingPage /> },
       { path: "/regulate/chat", element: <RegulateChatPage /> },

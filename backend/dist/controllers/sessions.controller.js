@@ -13,6 +13,16 @@ exports.sessionsController = {
             next(err);
         }
     },
+    getAll: async (req, res, next) => {
+        try {
+            const type = req.query.type;
+            const sessions = await sessions_service_1.sessionsService.findAll(type);
+            res.json(sessions);
+        }
+        catch (err) {
+            next(err);
+        }
+    },
     create: async (req, res, next) => {
         const parseResult = sessions_validator_1.createSessionSchema.safeParse(req.body);
         if (!parseResult.success) {

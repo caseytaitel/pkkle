@@ -18,6 +18,12 @@ exports.sessionsService = {
             orderBy: { timestamp: "asc" },
         });
     },
+    findAll: async (type) => {
+        return client_1.prisma.session.findMany({
+            where: type ? { type } : undefined,
+            orderBy: { createdAt: "desc" },
+        });
+    },
     create: async (data) => {
         return client_1.prisma.session.create({
             data: {

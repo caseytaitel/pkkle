@@ -77,6 +77,17 @@ export default function TodayPage() {
           >
             Start Pre-Session
           </Button>
+
+          {/* History affordance */}
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => navigateWithFade("/history")}
+              className="text-sm text-gray-500 underline underline-offset-4"
+            >
+              Recent notes
+            </button>
+          </div>
         </div>
       </Page>
     );
@@ -130,6 +141,17 @@ export default function TodayPage() {
             </p>
           </div>
         )}
+
+        {/* History affordance */}
+        <div className="pt-4 text-center">
+          <button
+            type="button"
+            onClick={() => navigateWithFade("/history")}
+            className="text-sm text-gray-500 underline underline-offset-4"
+          >
+            Recent notes
+          </button>
+        </div>
       </div>
     </Page>
   );

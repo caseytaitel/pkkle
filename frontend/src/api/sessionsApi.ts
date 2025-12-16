@@ -15,6 +15,13 @@ export const sessionsApi = {
     return res.data;
   },
 
+  getAll: async (type?: SessionType): Promise<Session[]> => {
+    const res = await api.get("/sessions", {
+      params: type ? { type } : undefined,
+    });
+    return res.data;
+  },
+
   create: async (data: CreateSessionInput): Promise<Session> => {
     try {
       const res = await api.post("/sessions", data);

@@ -12,6 +12,16 @@ export const sessionsController = {
     }
   },
 
+  getAll: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const type = req.query.type as "pre" | "post" | undefined;
+      const sessions = await sessionsService.findAll(type);
+      res.json(sessions);
+    } catch (err) {
+      next(err);
+    }
+  },  
+
   create: async (req: Request, res: Response, next: NextFunction) => {
     const parseResult = createSessionSchema.safeParse(req.body);
 

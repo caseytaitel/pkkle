@@ -20,6 +20,13 @@ export const sessionsService = {
     });
   },
 
+  findAll: async (type?: "pre" | "post") => {
+    return prisma.session.findMany({
+      where: type ? { type } : undefined,
+      orderBy: { createdAt: "desc" },
+    });
+  },  
+
   create: async (data: CreateSessionInput) => {
     return prisma.session.create({
       data: {

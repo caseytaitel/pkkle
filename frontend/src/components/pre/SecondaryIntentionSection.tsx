@@ -69,50 +69,60 @@ export function SecondaryIntentionSection({
           + Add another intention
         </button>
       )}
-
+  
       {open && (
         <div className="flex flex-col gap-3">
           <p className="text-base font-medium text-[var(--text-primary)]">
             Second Intention
           </p>
-
+  
           {/* No category yet */}
           {!category && (
             <p className="text-sm text-gray-500">
               Select a category to see suggestions.
             </p>
           )}
-
+  
           {/* Preset chips */}
           {category && (
-            <div
-              className="
-                relative flex gap-2 overflow-x-auto no-scrollbar
-                py-1 pr-2
-                snap-x snap-mandatory
-                after:absolute after:right-0 after:top-0 after:h-full after:w-6
-                after:bg-gradient-to-l after:from-white after:to-transparent
-              "
-            >
-              {PRESETS[category].map((preset) => (
-                <button
-                  type="button"
-                  key={preset}
-                  onClick={() => handlePresetClick(preset)}
-                  className={clsx(
-                    "px-3 py-2 text-sm font-normal whitespace-nowrap",
-                    "rounded-xl border transition duration-150 active:scale-[0.97]",
-                    selectedPreset === preset
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
-                  )}
-                >
-                  {preset}
-                </button>
-              ))}
+            <div className="relative">
+              {/* Scrollable chips */}
+              <div
+                className="
+                  flex gap-2 overflow-x-auto no-scrollbar
+                  py-1 pr-8
+                  snap-x snap-mandatory
+                "
+              >
+                {PRESETS[category].map((preset) => (
+                  <button
+                    type="button"
+                    key={preset}
+                    onClick={() => handlePresetClick(preset)}
+                    className={clsx(
+                      "px-3 py-2 text-sm font-normal whitespace-nowrap",
+                      "rounded-xl border transition duration-150 active:scale-[0.97]",
+                      selectedPreset === preset
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                    )}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
+  
+              {/* Right fade (visual only, never overlaps chips) */}
+              <div
+                className="
+                  pointer-events-none
+                  absolute right-0 top-0 h-full w-4
+                  bg-gradient-to-l from-white to-transparent
+                "
+              />
             </div>
           )}
-
+  
           {/* Textarea */}
           <Textarea
             value={value}
@@ -124,5 +134,5 @@ export function SecondaryIntentionSection({
         </div>
       )}
     </div>
-  );
+  );  
 }

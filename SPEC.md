@@ -1,193 +1,339 @@
-# pkkle Backend SPEC (V1)
-
-## 1. Domain Summary
-pkkle is a pickleball mental-performance app.
-
-V1 backend responsibilities:
-- Store Pre-Play sessions (intention).
-- Store Post-Play sessions (emotion + reflection).
-- Provide basic GET endpoints for both.
-- SOS is frontend-only in V1 (no backend logging).
-
-Out of scope:
-- Auth
-- Multi-user accounts
-- Analytics / streaks / goals
-- Progress dashboard
-- AI logic
-- SOS logging (future)
+# pkkle — V2 SPEC
 
 ---
 
-## 2. Data Model (Prisma)
+## 1. Product Summary
 
-We use separate models for Pre and Post sessions.
+pkkle is a mental-performance app for pickleball players focused on intention, emotional regulation, and reflection.
 
-    enum Emotion {
-      CALM
-      ANXIOUS
-      FRUSTRATED
-      CONFIDENT
-      EXCITED
-      NEUTRAL
-    }
+V2 is a polished, production-quality single-user app with three core pillars:
 
-    model PreSession {
-      id        Int      @id @default(autoincrement())
-      timestamp DateTime @default(now())
-      intention String   // required, 1–1500 chars
+1. Today — daily mental loop (Pre + Post)
+2. Regulate — nervous system grounding + reflection
+3. Success — brief micro-reward states
 
-      createdAt DateTime @default(now())
-      updatedAt DateTime @updatedAt
-    }
+V2 prioritizes:
 
-    model PostSession {
-      id         Int      @id @default(autoincrement())
-      timestamp  DateTime @default(now())
-      emotion    Emotion  // required
-      reflection String   // required, 1–5000 chars
-
-      createdAt  DateTime @default(now())
-      updatedAt  DateTime @updatedAt
-    }
-
-Decisions:
-- Timestamp is always server-generated.
-- Strings are trimmed.
-- Unknown fields → validation error.
+* Emotional safety
+* Calm, breathable UX
+* Clean, readable code
+* Locked scope
 
 ---
 
-## 3. API Surface
+## 2. Scope & Constraints (V2)
 
-Base path: /api
+* Pre-Session intention logging
+* Post-Session emotion + reflection logging
+* Daily Today orchestration
+* Regulate breathing + reflection (frontend-only)
+* Soft navigation + fade transitions
+* Polished micro-interactions
 
-### 3.1 POST /api/pre-sessions
+---
 
-Body:
+## 3. System Architecture Overview
 
-    {
-      "intention": "Play free and trust my instincts"
-    }
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* React Router v6
+* Axios API client
+
+### Backend
+
+* Node
+* Express
+* Prisma
+* SQLite
+* Zod validation
+
+Backend is stable and locked in V2.
+
+---
+
+## 4. Data Model (Backend)
+
+### Session (Prisma)
+
+```prisma
+model Session {
+  id         Int      @id @default(autoincrement())
+  type       String   // "pre" | "post"
+  intention  String?  // pre only
+  emotion    String?  // post only
+  reflection String?  // post only
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+```
+
+### Decisions
+
+* Single `Session` model (pre/post distinguished by `type`)
+* Server-generated timestamps
+* Strings are trimmed
+* Unknown fields rejected
+
+---
+
+## 5. API Surface (LOCKED)
+
+Base path: `/api`
+
+### 5.1 GET `/sessions/today`
+
+Returns all sessions created today.
+
+Response shape:
+
+```ts
+type SessionType = "pre" | "post"
+
+interface Session {
+  id: number
+  type: SessionType
+  intention?: string
+  emotion?: string
+  reflection?: string
+  createdAt: string
+}
+```
+
+Used exclusively by `TodayPage`.
+
+---
+
+### 5.2 POST `/sessions`
+
+Creates a new session.
+
+#### Pre-Session Body
+
+```json
+{
+  "type": "pre",
+  "intention": "string",
+  "secondaryIntention": "string (optional)"
+}
+```
 
 Rules:
-- intention: required, trimmed, 1–1500 chars.
-- No other fields allowed.
+
+* `intention`: required, trimmed
+* `secondaryIntention`: optional, trimmed
+* No unknown fields
 
 ---
 
-### 3.2 GET /api/pre-sessions
+#### Post-Session Body
 
-Query params:
-- limit (default 20, max 100)
-- order: desc | asc (default desc)
-
----
-
-### 3.3 POST /api/post-sessions
-
-Body:
-
-    {
-      "emotion": "FRUSTRATED",
-      "reflection": "I tightened up on big points but recovered faster this time."
-    }
+```json
+{
+  "type": "post",
+  "emotion": "string",
+  "reflection": "string"
+}
+```
 
 Rules:
-- emotion: required enum.
-- reflection: required, trimmed, 1–5000 chars.
-- No other fields allowed.
+
+* `emotion`: required
+* `reflection`: required, trimmed
+* No unknown fields
 
 ---
 
-### 3.4 GET /api/post-sessions
+## 6. Frontend Route Map
 
-Query params:
-- limit (default 20, max 100)
-- order: desc | asc (default desc)
+```
+/                       → TodayPage
+/pre                    → PreSessionPage
+/post                   → PostSessionPage
+/regulate               → RegulatePage
+/regulate/ground        → RegulateGroundingPage
+/regulate/redo          → RegulateRedoPage
+/regulate/chat          → RegulateChatPage
+/session/success        → SessionSuccessPage
+```
 
----
-
-## 4. Validation Rules
-
-General:
-- Reject unknown fields.
-- Trim all string fields.
-
-### PreSession
-- intention: required, 1–1500 chars.
-- No other fields permitted.
-
-### PostSession
-- emotion: required enum.
-- reflection: required, 1–5000 chars.
-- No other fields permitted.
+All routes are children of `RootLayout`.
 
 ---
 
-## 5. File Structure
+## 7. Navigation & Layout Rules
 
-    src/
-      app.ts
-      server.ts
+### RootLayout Responsibilities
 
-      routes/
-        preSessions.routes.ts
-        postSessions.routes.ts
+* Render `<Outlet />`
+* Control BottomNav visibility
+* Maintain safe-area padding
 
-      controllers/
-        preSessions.controller.ts
-        postSessions.controller.ts
+### BottomNav Visibility
 
-      services/
-        preSessions.service.ts
-        postSessions.service.ts
+Visible:
 
-      validators/
-        preSessions.validator.ts
-        postSessions.validator.ts
+* `/`
+* `/regulate`
 
-      errors/
-        AppError.ts
-        ValidationError.ts
+Hidden:
 
-      prisma/
-        client.ts
+* `/pre`
+* `/post`
+* `/regulate/ground`
+* `/regulate/redo`
+* `/regulate/chat`
+* `/session/success`
 
-      config/
-        env.ts
-
-Responsibilities:
-- Routes: HTTP wiring only.
-- Validators: validate + normalize input.
-- Controllers: orchestrate validator → service → response.
-- Services: business logic + Prisma.
-- Errors: central error types.
-- Prisma client: shared instance.
+Reason:
+These routes are immersive flows, not destinations.
 
 ---
 
-## 6. Testing Plan (High Level)
+## 8. Page-Level Behavior
 
-### PreSession
+### 8.1 TodayPage (`/`)
 
-POST:
-- Creates valid session.
-- Fails on missing/empty/too-long intention.
-- Fails on unknown fields.
+* Fetches `/sessions/today`
+* Derives state:
 
-GET:
-- Returns list.
-- Respects limit & order.
+  * No sessions → empty CTA
+  * Pre only → post CTA
+  * Pre + Post → completion state
+* No local persistence
 
-### PostSession
+---
 
-POST:
-- Creates valid session.
-- Fails on missing emotion or reflection.
-- Fails on invalid enum.
-- Fails on unknown fields.
+### 8.2 PreSessionPage (`/pre`)
 
-GET:
-- Returns list.
-- Respects limit & order.
+* Category selector (Rec / Drilling / Tournament)
+* Primary intention (presets + freeform)
+* Optional secondary intention
+* Sticky CTA
+* POST `/sessions` → success
+
+---
+
+### 8.3 PostSessionPage (`/post`)
+
+* Emotion select
+* Reflection textarea
+* POST `/sessions` → success
+* No spinners
+* Subtle pending opacity only if request >300ms
+
+---
+
+### 8.4 SessionSuccessPage (`/session/success`)
+
+* Reads `location.state.type`
+* Displays success animation + copy
+* Holds ~1100–1300ms
+* Auto-navigates back to Today
+
+---
+
+### 8.5 Regulate Flow
+
+#### Regulate Landing (`/regulate`)
+
+* Calm explanatory copy
+* Single CTA
+
+#### Grounding (`/regulate/ground`)
+
+* Intro delay (~3s)
+* 3 breathing cycles
+* Orb-based animation
+* Automatic redirect on completion
+
+#### Redo (`/regulate/redo`)
+
+* Gentle checkpoint
+* Continue or redo
+* Infinite redo supported
+
+#### Chat (`/regulate/chat`)
+
+* Free-form reflection
+* No AI logic
+* Done → Today
+
+---
+
+## 9. Animation & Interaction Rules
+
+Global rules:
+
+* No spinners by default
+* Use opacity for loading feedback
+* Fade transitions only (no libraries)
+
+Standard timings:
+
+* Navigation fade-out: 250ms
+* Page fade-in: automatic
+* Button press: subtle scale
+* Orb transitions: 4000ms ease-in-out
+
+Animations must:
+
+* Add clarity
+* Never distract
+* Never surprise
+
+---
+
+## 10. UI Primitives (LOCKED)
+
+* `Page`
+
+  * Safe-area padding
+  * Fade-in/out
+  * Scroll-to-top
+
+* `Button`
+
+  * Primary / secondary
+  * Disabled opacity
+  * Press animation
+
+* `Input / Textarea`
+
+  * Consistent borders
+  * Calm sizing
+  * Focus rings
+
+These primitives must be reused, not bypassed.
+
+---
+
+## 11. UX Principles (V2)
+
+1. Flow isolation over convenience
+2. One decision per screen
+3. White space > density
+4. Emotion before efficiency
+5. Silent success
+6. No fake intelligence
+
+---
+
+## 12. Known Extensions (Future)
+
+Deferred intentionally:
+
+* Regulate persistence
+* AI-assisted reflection
+* Insights / trends
+* Multi-user support
+* Dark mode
+* Design system expansion
+
+These are not V2 responsibilities.
+
+---

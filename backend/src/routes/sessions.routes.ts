@@ -4,6 +4,7 @@ import { sessionsController } from "../controllers/sessions.controller";
 const router = Router();
 
 router.get("/today", sessionsController.getToday);
+router.get("/", sessionsController.getAll);
 router.post("/", sessionsController.create);
 
 export default router;

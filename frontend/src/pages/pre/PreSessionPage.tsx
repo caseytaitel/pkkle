@@ -1,10 +1,12 @@
-import { useState, type FormEvent, useRef } from "react";
+import { useState, type FormEvent, useRef, useEffect } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
+import { getLastPreSession } from "../../api/memoryApi";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
 import { CategorySelector } from "../../components/pre/CategorySelector";
 import { PrimaryIntentionSection } from "../../components/pre/PrimaryIntentionSection";
 import { SecondaryIntentionSection } from "../../components/pre/SecondaryIntentionSection";
+import { ContinuityCard } from "../../components/pre/ContinuityCard";
 import { useNavigate } from "react-router-dom";
 
 export default function PreSessionPage() {
@@ -16,6 +18,13 @@ export default function PreSessionPage() {
   const [intention, setIntention] = useState("");
   const [secondaryIntention, setSecondaryIntention] = useState("");
 
+  const [lastIntention, setLastIntention] = useState<{
+    intention: string;
+    secondaryIntention?: string;
+  } | null>(null);
+
+  const [showContinuity, setShowContinuity] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [showPending, setShowPending] = useState(false);
   const pendingTimerRef = useRef<number | null>(null);
@@ -26,6 +35,38 @@ export default function PreSessionPage() {
   function navigateWithFade(path: string, state?: unknown) {
     setExiting(true);
     setTimeout(() => navigate(path, { state }), 250);
+  }
+
+  useEffect(() => {
+    sessionsApi.getToday().then((today) => {
+      const hasPreToday = today.some((s) => s.type === "pre");
+      if (hasPreToday) {
+        navigate("/", { replace: true });
+      }
+    });
+  }, []);  
+
+  // ENTRY-ONLY memory read
+  useEffect(() => {
+    getLastPreSession().then((session) => {
+      if (!session?.intention) return;
+
+      setLastIntention({
+        intention: session.intention,
+        ...(session.secondaryIntention && {
+          secondaryIntention: session.secondaryIntention,
+        }),
+      });
+    });
+  }, []);
+
+  function handleUseLastIntention() {
+    if (!lastIntention) return;
+
+    setIntention(lastIntention.intention);
+    setSecondaryIntention(lastIntention.secondaryIntention ?? "");
+    setShowContinuity(false);
+    setError("");
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -60,12 +101,20 @@ export default function PreSessionPage() {
 
   return (
     <Page title="Pre-Session" noBottomPadding exiting={exiting}>
-      {/* FORM CONTENT */}
       <form
         id="pre-session-form"
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 px-4 pb-40"
       >
+        {/* Continuity */}
+        {lastIntention && showContinuity && (
+          <ContinuityCard
+            intention={lastIntention.intention}
+            onUse={handleUseLastIntention}
+            onChange={() => setShowContinuity(false)}
+          />
+        )}
+
         {/* Subheading */}
         <div className="mt-0">
           <h2 className="text-base font-medium text-[var(--text-primary)]">

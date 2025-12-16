@@ -1,5 +1,6 @@
-import { useState, type FormEvent, useRef } from "react";
+import { useState, type FormEvent, useRef, useEffect } from "react";
 import { sessionsApi } from "../../api/sessionsApi";
+import { getTodaysPreSession } from "../../api/memoryApi";
 import Page from "../../components/ui/Page";
 import { EMOTIONS, type Emotion } from "../../constants/emotions";
 import { Button } from "../../components/ui/Button";
@@ -17,10 +18,21 @@ export default function PostSessionPage() {
   const navigate = useNavigate();
   const [exiting, setExiting] = useState(false);
 
+  const [todaysIntention, setTodaysIntention] = useState<string | null>(null);
+
   function navigateWithFade(path: string, state?: unknown) {
     setExiting(true);
     setTimeout(() => navigate(path, { state }), 250);
   }
+
+  // ENTRY-ONLY memory read (fail-silent)
+  useEffect(() => {
+    getTodaysPreSession().then((pre) => {
+      if (pre?.intention) {
+        setTodaysIntention(pre.intention);
+      }
+    });
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -53,6 +65,13 @@ export default function PostSessionPage() {
   return (
     <Page title="Post-Session Reflection" exiting={exiting}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {/* Intention reference (read-only) */}
+        {todaysIntention && (
+          <p className="text-sm text-gray-600">
+            Today’s intention: {todaysIntention}
+          </p>
+        )}
+
         {/* Emotion + Reflection group */}
         <div className="flex flex-col gap-4">
           {/* Emotion dropdown */}
@@ -86,7 +105,6 @@ export default function PostSessionPage() {
                 ))}
               </select>
 
-              {/* Custom arrow */}
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
                 ▾
               </span>
@@ -102,9 +120,9 @@ export default function PostSessionPage() {
             required
           />
         </div>
-  
+
         {error && <p className="text-red-600">{error}</p>}
-  
+
         <Button
           type="submit"
           disabled={loading}
@@ -114,5 +132,5 @@ export default function PostSessionPage() {
         </Button>
       </form>
     </Page>
-  );  
+  );
 }
