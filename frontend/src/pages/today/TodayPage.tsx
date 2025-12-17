@@ -22,7 +22,6 @@ export default function TodayPage() {
     setTimeout(() => navigate(path), 250);
   }
 
-  // detect completion banner
   useEffect(() => {
     if (location.state?.justCompleted) {
       setJustCompleted(location.state.justCompleted);
@@ -30,14 +29,13 @@ export default function TodayPage() {
     }
   }, [location.state]);
 
-  // load today's sessions
   useEffect(() => {
     async function load() {
       try {
         const data = await sessionsApi.getToday();
         setSessions(data);
       } catch (err) {
-        console.error("Couldn't load today's sessions. Please try again.", err);
+        console.error("Couldn't load today's sessions.", err);
       } finally {
         setLoading(false);
       }
@@ -77,17 +75,6 @@ export default function TodayPage() {
           >
             Start Pre-Session
           </Button>
-
-          {/* History affordance */}
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => navigateWithFade("/history")}
-              className="text-sm text-gray-500 underline underline-offset-4"
-            >
-              Recent notes
-            </button>
-          </div>
         </div>
       </Page>
     );
@@ -141,17 +128,6 @@ export default function TodayPage() {
             </p>
           </div>
         )}
-
-        {/* History affordance */}
-        <div className="pt-4 text-center">
-          <button
-            type="button"
-            onClick={() => navigateWithFade("/history")}
-            className="text-sm text-gray-500 underline underline-offset-4"
-          >
-            Recent notes
-          </button>
-        </div>
       </div>
     </Page>
   );

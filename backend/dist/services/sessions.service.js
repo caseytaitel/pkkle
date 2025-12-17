@@ -28,6 +28,7 @@ exports.sessionsService = {
         return client_1.prisma.session.create({
             data: {
                 type: data.type,
+                category: data.category ?? null,
                 intention: data.intention ?? null,
                 secondaryIntention: data.secondaryIntention ?? null,
                 emotion: data.emotion ?? null,

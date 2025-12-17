@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Page from "../../components/ui/Page";
-import { getAllPreSessions, getAllPostSessions } from "../../api/memoryApi";
+import { getAllPostSessions } from "../../api/memoryApi";
 import type { Session } from "../../types/Session";
 
 export default function HistoryPage() {
@@ -8,20 +8,9 @@ export default function HistoryPage() {
 
   useEffect(() => {
     async function load() {
-      const [pres, posts] = await Promise.all([
-        getAllPreSessions(),
-        getAllPostSessions(),
-      ]);
-
-      const combined = [...pres, ...posts].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() -
-          new Date(a.createdAt).getTime()
-      );
-
-      setSessions(combined);
+      const posts = await getAllPostSessions();
+      setSessions(posts);
     }
-
     load();
   }, []);
 
@@ -46,25 +35,12 @@ function SessionRow({ session }: { session: Session }) {
     <div className="border-b border-gray-200 pb-4">
       <p className="text-xs text-gray-500 mb-1">{date}</p>
 
-      {session.type === "pre" && (
-        <div className="text-sm text-gray-800">
-          <p>{session.intention}</p>
-          {session.secondaryIntention && (
-            <p className="text-gray-600 mt-1">
-              {session.secondaryIntention}
-            </p>
-          )}
-        </div>
-      )}
-
-      {session.type === "post" && (
-        <div className="text-sm text-gray-800">
-          <p className="capitalize text-gray-600 mb-1">
-            {session.emotion}
-          </p>
-          <ExpandableText text={session.reflection ?? ""} />
-        </div>
-      )}
+      <div className="text-sm text-gray-800">
+        <p className="capitalize text-gray-600 mb-1">
+          {session.emotion}
+        </p>
+        <ExpandableText text={session.reflection ?? ""} />
+      </div>
     </div>
   );
 }

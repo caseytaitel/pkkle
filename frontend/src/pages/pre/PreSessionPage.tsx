@@ -1,29 +1,33 @@
 import { useState, type FormEvent, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { sessionsApi } from "../../api/sessionsApi";
 import { getLastPreSession } from "../../api/memoryApi";
+import type { SessionType } from "../../types/Session";
+
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
 import { CategorySelector } from "../../components/pre/CategorySelector";
 import { PrimaryIntentionSection } from "../../components/pre/PrimaryIntentionSection";
 import { SecondaryIntentionSection } from "../../components/pre/SecondaryIntentionSection";
 import { ContinuityCard } from "../../components/pre/ContinuityCard";
-import { useNavigate } from "react-router-dom";
+
+type Category = "rec" | "drilling" | "tournament";
 
 export default function PreSessionPage() {
   const navigate = useNavigate();
 
-  const [category, setCategory] =
-    useState<"rec" | "drilling" | "tournament" | null>(null);
-
+  const [category, setCategory] = useState<Category | null>(null);
   const [intention, setIntention] = useState("");
   const [secondaryIntention, setSecondaryIntention] = useState("");
 
-  const [lastIntention, setLastIntention] = useState<{
+  const [entryMode, setEntryMode] = useState<"continuity" | "full">("full");
+
+  const [lastSession, setLastSession] = useState<{
+    category?: Category;
     intention: string;
     secondaryIntention?: string;
   } | null>(null);
-
-  const [showContinuity, setShowContinuity] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [showPending, setShowPending] = useState(false);
@@ -37,35 +41,52 @@ export default function PreSessionPage() {
     setTimeout(() => navigate(path, { state }), 250);
   }
 
+  /* Defensive guard: if Pre already exists today, silently redirect */
   useEffect(() => {
-    sessionsApi.getToday().then((today) => {
-      const hasPreToday = today.some((s) => s.type === "pre");
-      if (hasPreToday) {
-        navigate("/", { replace: true });
-      }
-    });
-  }, []);  
+    sessionsApi
+      .getToday()
+      .then((today) => {
+        if (today.some((s) => s.type === "pre")) {
+          navigate("/", { replace: true });
+        }
+      })
+      .catch(() => {
+        /* fail silent by design */
+      });
+  }, [navigate]);
 
-  // ENTRY-ONLY memory read
+  /* Entry-only memory read */
   useEffect(() => {
     getLastPreSession().then((session) => {
       if (!session?.intention) return;
 
-      setLastIntention({
+      setLastSession({
         intention: session.intention,
         ...(session.secondaryIntention && {
           secondaryIntention: session.secondaryIntention,
         }),
+        ...(session.category && {
+          category: session.category as Category,
+        }),
       });
+
+      setEntryMode("continuity");
     });
   }, []);
 
   function handleUseLastIntention() {
-    if (!lastIntention) return;
+    if (!lastSession) return;
 
-    setIntention(lastIntention.intention);
-    setSecondaryIntention(lastIntention.secondaryIntention ?? "");
-    setShowContinuity(false);
+    setCategory(lastSession.category ?? null);
+    setIntention(lastSession.intention);
+    setSecondaryIntention(lastSession.secondaryIntention ?? "");
+
+    setEntryMode("full");
+    setError("");
+  }
+
+  function handleChangeIntention() {
+    setEntryMode("full");
     setError("");
   }
 
@@ -80,7 +101,8 @@ export default function PreSessionPage() {
 
     try {
       await sessionsApi.create({
-        type: "pre",
+        type: "pre" as SessionType,
+        ...(category && { category }),
         intention,
         ...(secondaryIntention.trim().length > 0 && {
           secondaryIntention: secondaryIntention.trim(),
@@ -88,7 +110,7 @@ export default function PreSessionPage() {
       });
 
       navigateWithFade("/session/success", { state: { type: "pre" } });
-    } catch (err) {
+    } catch {
       setError("Couldn't save. Please try again.");
     } finally {
       if (pendingTimerRef.current) {
@@ -106,69 +128,70 @@ export default function PreSessionPage() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 px-4 pb-40"
       >
-        {/* Continuity */}
-        {lastIntention && showContinuity && (
+        {/* Continuity-only entry */}
+        {entryMode === "continuity" && lastSession && (
           <ContinuityCard
-            intention={lastIntention.intention}
+            intention={lastSession.intention}
             onUse={handleUseLastIntention}
-            onChange={() => setShowContinuity(false)}
+            onChange={handleChangeIntention}
           />
         )}
 
-        {/* Subheading */}
-        <div className="mt-0">
-          <h2 className="text-base font-medium text-[var(--text-primary)]">
-            Set Your Intention
-          </h2>
-        </div>
+        {/* Full Pre-Session flow */}
+        {entryMode === "full" && (
+          <>
+            <div>
+              <h2 className="text-base font-medium text-[var(--text-primary)]">
+                Set Your Intention
+              </h2>
+            </div>
 
-        {/* Category Selector */}
-        <div className="mt-2">
-          <CategorySelector
-            value={category}
-            onChange={(c) => {
-              setCategory(c);
-              setError("");
-            }}
-          />
-        </div>
+            <CategorySelector
+              value={category}
+              onChange={(c) => {
+                setCategory(c);
+                setError("");
+              }}
+            />
 
-        {/* Primary Intentions */}
-        <PrimaryIntentionSection
-          category={category}
-          value={intention}
-          onChange={(t) => {
-            setIntention(t);
-            setError("");
-          }}
-        />
+            <PrimaryIntentionSection
+              category={category}
+              value={intention}
+              onChange={(t) => {
+                setIntention(t);
+                setError("");
+              }}
+            />
 
-        {/* Secondary Intentions */}
-        <SecondaryIntentionSection
-          category={category}
-          value={secondaryIntention}
-          onChange={(t) => {
-            setSecondaryIntention(t);
-            setError("");
-          }}
-        />
+            <SecondaryIntentionSection
+              category={category}
+              value={secondaryIntention}
+              onChange={(t) => {
+                setSecondaryIntention(t);
+                setError("");
+              }}
+            />
 
-        {error && <p className="text-red-600">{error}</p>}
+            {error && <p className="text-red-600">{error}</p>}
+          </>
+        )}
       </form>
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+1rem)] bg-white/90 backdrop-blur-sm shadow-lg">
-        <Button
-          type="submit"
-          form="pre-session-form"
-          disabled={loading || !category || intention.trim().length === 0}
-          className={`w-full ${showPending ? "opacity-80" : ""}`}
-        >
-          {secondaryIntention.trim().length > 0
-            ? "Set Intentions"
-            : "Set Intention"}
-        </Button>
-      </div>
+      {entryMode === "full" && (
+        <div className="fixed bottom-0 left-0 right-0 px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+1rem)] bg-white/90 backdrop-blur-sm shadow-lg">
+          <Button
+            type="submit"
+            form="pre-session-form"
+            disabled={loading || !category || intention.trim().length === 0}
+            className={`w-full ${showPending ? "opacity-80" : ""}`}
+          >
+            {secondaryIntention.trim().length > 0
+              ? "Set Intentions"
+              : "Set Intention"}
+          </Button>
+        </div>
+      )}
     </Page>
   );
 }

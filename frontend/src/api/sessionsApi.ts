@@ -3,6 +3,7 @@ import type { Session, SessionType } from "../types/Session";
 
 export interface CreateSessionInput {
   type: SessionType;
+  category?: "rec" | "drilling" | "tournament";
   intention?: string | null;
   secondaryIntention?: string | null;
   emotion?: string | null;

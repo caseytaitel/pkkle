@@ -1,4 +1,3 @@
-import { useState } from "react";
 import clsx from "clsx";
 import { Textarea } from "../ui/Textarea";
 
@@ -35,23 +34,6 @@ const PRESETS: Record<Category, string[]> = {
 };
 
 export function PrimaryIntentionSection({ category, value, onChange }: Props) {
-  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
-
-  function handleTextChange(text: string) {
-    if (selectedPreset) {
-      const startsWithPreset = text.startsWith(selectedPreset);
-      if (text.length === 0 || !startsWithPreset) {
-        setSelectedPreset(null);
-      }
-    }
-    onChange(text);
-  }
-
-  function handlePresetClick(text: string) {
-    setSelectedPreset(text);
-    onChange(text);
-  }
-
   if (!category) return null;
 
   const presets = PRESETS[category];
@@ -61,53 +43,40 @@ export function PrimaryIntentionSection({ category, value, onChange }: Props) {
       <p className="text-base font-medium text-[var(--text-primary)]">
         What's your focus today?
       </p>
-  
-      {/* Preset chips */}
+
       <div className="relative">
-        {/* Scrollable chips */}
-        <div
-          className="
-            flex gap-2 overflow-x-auto no-scrollbar
-            py-1 pr-8
-            snap-x snap-mandatory
-          "
-        >
-          {presets.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => handlePresetClick(preset)}
-              className={clsx(
-                "px-3 py-2 text-sm font-normal whitespace-nowrap",
-                "rounded-xl border transition duration-150 active:scale-[0.97]",
-                selectedPreset === preset
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
-              )}
-            >
-              {preset}
-            </button>
-          ))}
+        <div className="flex gap-2 overflow-x-auto no-scrollbar py-1 pr-8">
+          {presets.map((preset) => {
+            const selected = value === preset;
+
+            return (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => onChange(preset)}
+                className={clsx(
+                  "px-3 py-2 text-sm whitespace-nowrap rounded-xl border transition",
+                  selected
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                )}
+              >
+                {preset}
+              </button>
+            );
+          })}
         </div>
-  
-        {/* Right fade (visual only) */}
-        <div
-          className="
-            pointer-events-none
-            absolute right-0 top-0 h-full w-4
-            bg-gradient-to-l from-white to-transparent
-          "
-        />
+
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-4 bg-gradient-to-l from-white to-transparent" />
       </div>
-  
-      {/* Textarea */}
+
       <Textarea
         value={value}
-        onChange={(e) => handleTextChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Try one of the above, or write your own…"
         maxLength={500}
         className="mt-4 text-sm placeholder:text-gray-400"
       />
     </div>
   );
-}  
+}

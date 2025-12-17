@@ -6,3 +6,9 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+/* 🔍 TEMP DEBUG — log outgoing payload */
+api.interceptors.request.use((config) => {
+  console.log("AXIOS DATA SENT:", JSON.stringify(config.data));
+  return config;
+});
