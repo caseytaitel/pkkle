@@ -7,8 +7,9 @@ import PostSessionPage from "../pages/post/PostSessionPage";
 import HistoryPage from "../pages/history/HistoryPage";
 import RegulatePage from "../pages/regulate/RegulatePage";
 import RegulateGroundingPage from "../pages/regulate/RegulateGroundingPage";
-import RegulateChatPage from "../pages/regulate/RegulateChatPage";
 import RegulateRedoPage from "../pages/regulate/RegulateRedoPage";
+import RegulateCompletionPage from "../pages/regulate/RegulateCompletionPage";
+import RegulateIntegratePage from "../pages/regulate/RegulateIntegrate";
 import SessionSuccessPage from "../pages/success/SessionSuccessPage";
 
 export const router = createBrowserRouter([
@@ -21,8 +22,9 @@ export const router = createBrowserRouter([
       { path: "/history", element: <HistoryPage /> },
       { path: "/regulate", element: <RegulatePage /> },
       { path: "/regulate/ground", element: <RegulateGroundingPage /> },
-      { path: "/regulate/chat", element: <RegulateChatPage /> },
       { path: "/regulate/redo", element: <RegulateRedoPage /> },
+      { path: "/regulate/complete", element: <RegulateCompletionPage /> },
+      { path: "/regulate/integrate", element: <RegulateIntegratePage /> },
       { path: "/session/success", element: <SessionSuccessPage /> },
     ],
   },

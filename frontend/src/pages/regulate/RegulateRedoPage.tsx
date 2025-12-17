@@ -22,7 +22,7 @@ export default function RegulateRedoPage() {
   }
 
   function handleContinue() {
-    softNavigate("/regulate/chat");
+    softNavigate("/regulate/complete");
   }
 
   return (

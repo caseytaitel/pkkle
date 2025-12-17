@@ -16,11 +16,11 @@ export default function RegulatePage() {
     <Page title="Regulate" exiting={exiting}>
       <div className="pt-20 flex flex-col gap-4 text-center">
         <p className="text-base font-medium text-[var(--text-primary)]">
-          Take a moment to regulate your nervous system.
+          Take a moment to shift modes and gain clarity.
         </p>
 
         <p className="text-base text-[var(--text-secondary)] leading-relaxed">
-          A few breaths can help you settle in and play your game.
+          A few breaths can help you access a steadier state.
         </p>
 
         <Button
