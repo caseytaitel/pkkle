@@ -109,7 +109,8 @@ export default function PreSessionPage() {
         }),
       });
 
-      navigateWithFade("/session/success", { state: { type: "pre" } });
+      navigateWithFade("/session/success", { type: "pre" });
+      
     } catch {
       setError("Couldn't save. Please try again.");
     } finally {

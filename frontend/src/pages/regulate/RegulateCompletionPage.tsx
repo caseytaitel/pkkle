@@ -1,79 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Page from "../../components/ui/Page";
 import { Button } from "../../components/ui/Button";
-import { sessionsApi } from "../../api/sessionsApi";
-
-const STATE_ECHO_KEY = "hasCompletedRegulation";
 
 export default function RegulateCompletionPage() {
   const navigate = useNavigate();
+  const [exiting, setExiting] = useState(false);
 
-  const [showBeginSession, setShowBeginSession] = useState(false);
-  const [showStateEcho, setShowStateEcho] = useState(false);
-
-  // On mount:
-  // 1) record that regulation was completed (for future state echo)
-  // 2) decide whether "Begin session" should be shown
-  useEffect(() => {
-    localStorage.setItem(STATE_ECHO_KEY, "true");
-    setShowStateEcho(true);
-
-    async function checkPreSession() {
-      try {
-        const today = await sessionsApi.getToday();
-        const hasPre = today.some((s) => s.type === "pre");
-        setShowBeginSession(!hasPre);
-      } catch {
-        // fail-silent by design
-        setShowBeginSession(false);
-      }
-    }
-
-    checkPreSession();
-  }, []);
+  function navigateWithFade(path: string) {
+    setExiting(true);
+    setTimeout(() => navigate(path), 250);
+  }
 
   return (
-    <Page title="Regulation Complete">
-      <div className="pt-24 flex flex-col gap-8 text-center">
-        {/* Completion acknowledgment */}
-        <p className="text-lg text-[var(--text-primary)]">
-          This state is available to you.
+    <Page exiting={exiting}>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center gap-10 px-6">
+        <p className="text-base text-[var(--text-secondary)] flex items-center gap-2">
+          Regulation complete
+          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px]">
+            ✓
+          </span>
         </p>
 
-        {/* State echo (non-evaluative) */}
-        {showStateEcho && (
-          <p className="text-sm text-[var(--text-secondary)]">
-            You’ve accessed this state before.
-          </p>
-        )}
-
-        {/* Exit options */}
-        <div className="flex flex-col gap-4 mt-6">
+        <div className="w-full flex flex-col gap-4">
           {/* Primary */}
-          <Button onClick={() => navigate("/")}>
+          <Button onClick={() => navigateWithFade("/")}>
             Return to Today
           </Button>
 
-          {/* Optional integrate */}
+          {/* Secondary */}
           <button
             type="button"
-            onClick={() => navigate("/regulate/integrate")}
+            onClick={() => navigateWithFade("/regulate/integrate")}
             className="text-sm text-gray-600 underline underline-offset-4"
           >
             Integrate
           </button>
-
-          {/* Contextual begin session */}
-          {showBeginSession && (
-            <button
-              type="button"
-              onClick={() => navigate("/pre")}
-              className="text-sm text-gray-600 underline underline-offset-4"
-            >
-              Begin session
-            </button>
-          )}
         </div>
       </div>
     </Page>

@@ -20,12 +20,12 @@ export default function SessionSuccessPage() {
     return () => clearTimeout(timer);
   }, [navigate]);
 
-  const title = type === "pre" ? "Intention saved" : "Reflection saved";
+  const title = type === "pre" ? "Intention set." : "Reflection complete.";
 
   const subtitle =
     type === "pre"
-      ? "You’re focused and ready to play."
-      : "You’ve captured this session. Nice work.";
+      ? "You’re clear on your focus today."
+      : "You’ve brought this to a close.";
 
   return (
     <Page exiting={exiting}>

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Page from "../../components/ui/Page";
-import { Textarea } from "../../components/ui/Textarea";
 import { Button } from "../../components/ui/Button";
+import { Textarea } from "../../components/ui/Textarea";
 
 export default function RegulateIntegratePage() {
   const navigate = useNavigate();
-  const [text, setText] = useState("");
+  const [showNote, setShowNote] = useState(false);
+  const [note, setNote] = useState("");
+
   const [exiting, setExiting] = useState(false);
 
   function softNavigate(path: string) {
@@ -16,24 +18,44 @@ export default function RegulateIntegratePage() {
 
   return (
     <Page title="Integrate" exiting={exiting}>
-       <p className="text-[var(--text-secondary)] leading-relaxed flex items-center gap-1">
-          Regulation complete
-          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#7C3AED] text-white text-[10px]">
-              ✓
-          </span>
-      </p>
-      <div className="mb-3">
-        <p className="text-[var(--text-secondary)] leading-relaxed mt-3 mb-1">
-          What do you notice right now?
+      <div className="flex flex-col gap-6">
+        {/* Step 1 — Recognition */}
+        <p className="text-sm text-[var(--text-secondary)]">
+          Regulation complete.
         </p>
-      </div>
 
-      <Textarea
-        className="h-40"
-        placeholder="A word, reminder, or insight…"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+        {/* Step 2 — Interpretation (process-level only) */}
+        <p className="text-sm text-[var(--text-secondary)]">
+          Regulation creates a small pause in the nervous system, allowing things to
+          settle on their own.
+        </p>
+
+        {/* Step 3 — Somatic tie-in */}
+        <p className="text-sm text-[var(--text-secondary)]">
+          You might notice that pause in your body — or you might not. Either is fine.
+        </p>
+
+        {/* Step 4 — Optional expression */}
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={() => setShowNote((v) => !v)}
+            className="text-sm text-gray-600 underline underline-offset-4"
+          >
+            Add a note
+          </button>
+
+          {showNote && (
+            <div className="mt-3">
+              <Textarea
+                className="h-32 text-sm"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       <Button className="w-full mt-4" onClick={() => softNavigate("/")}>
         Done

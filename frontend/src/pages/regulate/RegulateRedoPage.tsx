@@ -21,9 +21,9 @@ export default function RegulateRedoPage() {
     softNavigate("/regulate/ground", { redo: true });
   }
 
-  function handleContinue() {
+  function handleFinish() {
     softNavigate("/regulate/complete");
-  }
+  }  
 
   return (
     <div
@@ -34,18 +34,18 @@ export default function RegulateRedoPage() {
       {/* Content block */}
       <div className="mt-24 flex flex-col gap-10">
         <h1 className="text-xl font-semibold leading-snug">
-          If you still feel unsettled, take another round.
+          Feel free to take another round.
         </h1>
 
         <div className="flex flex-col gap-6">
           {/* PRIMARY ACTION (continue) */}
           <button
             type="button"
-            onClick={handleContinue}
+            onClick={handleFinish}
             disabled={locked}
             className="w-full bg-black text-white p-4 rounded-xl text-lg active:scale-[0.97] transition disabled:opacity-50"
           >
-            I’m ready — continue
+            Finish
           </button>
 
           {/* SECONDARY ACTION (redo) */}

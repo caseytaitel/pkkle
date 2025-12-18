@@ -1,4 +1,5 @@
 import { useState, type FormEvent, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { sessionsApi } from "../../api/sessionsApi";
 import { getTodaysPreSession, getAllPostSessions } from "../../api/memoryApi";
 import Page from "../../components/ui/Page";
@@ -8,12 +9,21 @@ import { Textarea } from "../../components/ui/Textarea";
 import clsx from "clsx";
 
 export default function PostSessionPage() {
+  const navigate = useNavigate();
+  
+  function navigateWithFade(path: string, state?: unknown) {
+    setExiting(true);
+    setTimeout(() => navigate(path, { state }), 250);
+  }
+
   const [emotion, setEmotion] = useState<Emotion | "">("");
   const [reflection, setReflection] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [showPending, setShowPending] = useState(false);
   const pendingTimerRef = useRef<number | null>(null);
   const [error, setError] = useState("");
+  
   const [exiting, setExiting] = useState(false);
 
   const [todaysIntention, setTodaysIntention] = useState<string | null>(null);
@@ -55,10 +65,8 @@ export default function PostSessionPage() {
         reflection,
       });
 
-      setExiting(true);
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 250);
+      navigateWithFade("/session/success", { type: "post" });
+
     } catch {
       setError("Couldn't save. Please try again.");
     } finally {
