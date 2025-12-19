@@ -10,7 +10,6 @@ import { Button } from "../../components/ui/Button";
 import { CategorySelector } from "../../components/pre/CategorySelector";
 import { PrimaryIntentionSection } from "../../components/pre/PrimaryIntentionSection";
 import { SecondaryIntentionSection } from "../../components/pre/SecondaryIntentionSection";
-import { ContinuityCard } from "../../components/pre/ContinuityCard";
 
 type Category = "rec" | "drilling" | "tournament";
 
@@ -21,7 +20,7 @@ export default function PreSessionPage() {
   const [intention, setIntention] = useState("");
   const [secondaryIntention, setSecondaryIntention] = useState("");
 
-  const [entryMode, setEntryMode] = useState<"continuity" | "full">("full");
+  const [entryMode, setEntryMode] = useState<"recommit" | "full">("full");
 
   const [lastSession, setLastSession] = useState<{
     category?: Category;
@@ -51,7 +50,6 @@ export default function PreSessionPage() {
         }
       })
       .catch(() => {
-        /* fail silent by design */
       });
   }, [navigate]);
 
@@ -70,25 +68,53 @@ export default function PreSessionPage() {
         }),
       });
 
-      setEntryMode("continuity");
+      setEntryMode("recommit");
     });
   }, []);
 
-  function handleUseLastIntention() {
+  async function handleAffirmIntention() {
     if (!lastSession) return;
-
-    setCategory(lastSession.category ?? null);
-    setIntention(lastSession.intention);
-    setSecondaryIntention(lastSession.secondaryIntention ?? "");
-
-    setEntryMode("full");
+  
+    if (!lastSession.category) {
+      setEntryMode("full");
+      return;
+    }
+  
     setError("");
-  }
+    setLoading(true);
+  
+    pendingTimerRef.current = window.setTimeout(() => {
+      setShowPending(true);
+    }, 300);
+  
+    try {
+      await sessionsApi.create({
+        type: "pre" as SessionType,
+        category: lastSession.category,
+        intention: lastSession.intention,
+        ...(lastSession.secondaryIntention?.trim().length
+          ? { secondaryIntention: lastSession.secondaryIntention.trim() }
+          : {}),
+      });
+  
+      navigateWithFade("/session/success", { state: { type: "pre" } });
+    } catch {
+      setError("Couldn't save. Please try again.");
+    } finally {
+      if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
+      setShowPending(false);
+      setLoading(false);
+    }
+  }  
 
   function handleChangeIntention() {
+    setCategory(null);
+    setIntention("");
+    setSecondaryIntention("");
+  
     setEntryMode("full");
     setError("");
-  }
+  }  
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -129,13 +155,47 @@ export default function PreSessionPage() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 px-4 pb-40"
       >
-        {/* Continuity-only entry */}
-        {entryMode === "continuity" && lastSession && (
-          <ContinuityCard
-            intention={lastSession.intention}
-            onUse={handleUseLastIntention}
-            onChange={handleChangeIntention}
-          />
+        {/* Recommit entry */}
+        {entryMode === "recommit" && lastSession && (
+          <div className="rounded-xl border bg-white p-4 flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <p className="text-sm text-[var(--text-secondary)]">
+                Your current practice
+              </p>
+
+              <p className="text-base text-[var(--text-primary)] truncate">
+                {lastSession.intention}
+              </p>
+
+              {lastSession.secondaryIntention && (
+                <p className="text-sm text-[var(--text-secondary)] truncate">
+                  {lastSession.secondaryIntention}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <Button
+                type="button"
+                onClick={handleAffirmIntention}
+                disabled={loading}
+                className={showPending ? "opacity-80" : ""}
+              >
+                Affirm intention
+              </Button>
+
+              <button
+                type="button"
+                onClick={handleChangeIntention}
+                disabled={loading}
+                className="text-sm text-gray-600 underline underline-offset-4 disabled:opacity-50"
+              >
+                Change intention
+              </button>
+
+              {error && <p className="text-red-600 text-sm">{error}</p>}
+            </div>
+          </div>
         )}
 
         {/* Full Pre-Session flow */}

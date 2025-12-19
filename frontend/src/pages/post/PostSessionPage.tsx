@@ -10,20 +10,22 @@ import clsx from "clsx";
 
 export default function PostSessionPage() {
   const navigate = useNavigate();
-  
+
   function navigateWithFade(path: string, state?: unknown) {
     setExiting(true);
     setTimeout(() => navigate(path, { state }), 250);
   }
 
-  const [emotion, setEmotion] = useState<Emotion | "">("");
+  // Emotion state (hybrid)
+  const [primaryEmotion, setPrimaryEmotion] = useState<Emotion | "">("");
+  const [secondaryEmotions, setSecondaryEmotions] = useState<Emotion[]>([]);
+
   const [reflection, setReflection] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [showPending, setShowPending] = useState(false);
   const pendingTimerRef = useRef<number | null>(null);
   const [error, setError] = useState("");
-  
   const [exiting, setExiting] = useState(false);
 
   const [todaysIntention, setTodaysIntention] = useState<string | null>(null);
@@ -49,6 +51,12 @@ export default function PostSessionPage() {
     setShowNotes((v) => !v);
   }
 
+  function toggleSecondaryEmotion(e: Emotion) {
+    setSecondaryEmotions((prev) =>
+      prev.includes(e) ? prev.filter((x) => x !== e) : [...prev, e]
+    );
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
@@ -59,14 +67,18 @@ export default function PostSessionPage() {
     }, 300);
 
     try {
+      const emotionPayload = [
+        primaryEmotion,
+        ...secondaryEmotions.filter((e) => e !== primaryEmotion),
+      ].join(", ");
+
       await sessionsApi.create({
         type: "post",
-        emotion,
+        emotion: emotionPayload,
         reflection,
       });
 
       navigateWithFade("/session/success", { type: "post" });
-
     } catch {
       setError("Couldn't save. Please try again.");
     } finally {
@@ -81,55 +93,81 @@ export default function PostSessionPage() {
   return (
     <Page title="Post-Session Reflection" exiting={exiting}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {/* Emotion */}
+        <div className="flex flex-col gap-3">
+          <label className="text-base font-medium text-[var(--text-primary)]">
+            What felt most present?
+          </label>
+
+          {/* Primary emotion */}
+          <div className="relative">
+            <select
+              className={clsx(
+                "w-full border rounded-lg bg-white",
+                "py-2.5 pl-3 pr-12",
+                "text-sm appearance-none",
+                primaryEmotion === "" ? "text-gray-400" : "text-black",
+                "focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black"
+              )}
+              value={primaryEmotion}
+              onChange={(e) =>
+                setPrimaryEmotion(e.target.value as Emotion)
+              }
+              required
+            >
+              <option value="" disabled>
+                Select a primary emotion…
+              </option>
+              {EMOTIONS.map((e) => (
+                <option key={e} value={e}>
+                  {e.charAt(0).toUpperCase() + e.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+              ▾
+            </span>
+          </div>
+
+          {/* Secondary emotions (optional) */}
+          <div className="flex flex-wrap gap-2 mt-1">
+            {EMOTIONS.filter((e) => e !== primaryEmotion).map((e) => {
+              const active = secondaryEmotions.includes(e);
+              return (
+                <button
+                  key={e}
+                  type="button"
+                  onClick={() => toggleSecondaryEmotion(e)}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-full text-sm border transition",
+                    active
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-gray-600 border-gray-300"
+                  )}
+                >
+                  {e.charAt(0).toUpperCase() + e.slice(1)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Intention anchor */}
         {todaysIntention && (
           <p className="text-sm text-gray-600">
             Today’s intention: {todaysIntention}
           </p>
         )}
 
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label className="text-base font-medium text-[var(--text-primary)]">
-              How was today's play?
-            </label>
-
-            <div className="relative">
-              <select
-                className={clsx(
-                  "w-full border rounded-lg bg-white",
-                  "py-2.5 pl-3 pr-12",
-                  "text-sm appearance-none",
-                  emotion === "" ? "text-gray-400" : "text-black",
-                  "focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black"
-                )}
-                value={emotion}
-                onChange={(e) => setEmotion(e.target.value as Emotion)}
-                required
-              >
-                <option value="" disabled>
-                  Select an emotion…
-                </option>
-                {EMOTIONS.map((e) => (
-                  <option key={e} value={e}>
-                    {e.charAt(0).toUpperCase() + e.slice(1)}
-                  </option>
-                ))}
-              </select>
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
-                ▾
-              </span>
-            </div>
-          </div>
-
-          <Textarea
-            placeholder="What stood out to you?"
-            className="text-sm placeholder:text-gray-400"
-            value={reflection}
-            onChange={(e) => setReflection(e.target.value)}
-            required
-          />
-        </div>
+        {/* Reflection */}
+        <Textarea
+          placeholder="What stood out to you?"
+          className="text-sm placeholder:text-gray-400"
+          value={reflection}
+          onChange={(e) => setReflection(e.target.value)}
+          required
+        />
 
         {error && <p className="text-red-600">{error}</p>}
 

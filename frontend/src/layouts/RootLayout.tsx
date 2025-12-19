@@ -8,7 +8,6 @@ export default function RootLayout() {
     "/pre",
     "/post",
     "/regulate/ground",
-    "/regulate/integrate",
     "/session/success",
   ];
 
